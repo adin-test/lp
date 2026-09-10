@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Klarna Promo Codes 2026: 4 Live Offers | Laters.com</title>
+<title>Klarna Promo Codes 2026: 2 Live Offers | Laters.com</title>
 <meta name="description" content="Every live Klarna promo code on Laters.com, plus Klarna's standing plans, fees, and country availability. Copy a code and search flights in one action.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://laters.com/deals/klarna">
@@ -670,8 +670,8 @@ a { color: inherit; }
 <!-- ======================= sample data band ======================= -->
 <div class="databand">
   <div class="shell databand-inner">
-    <span class="databand-tag">Sample data</span>
-    <p>Every offer and plan detail on this build is placeholder content for layout review. These are first-party Laters.com listings in the real product, but nothing here has gone through the verification queue, so none of it may ship as-is.</p>
+    <span class="databand-tag">Preview</span>
+    <p>The Klarna codes on this build match laters.com/payment/klarna as of 10 Sep 2026, and no end date is published for either. Plan, fee and disclaimer details further down are still placeholder content that has not gone through the verification queue.</p>
   </div>
 </div>
 
@@ -902,7 +902,7 @@ a { color: inherit; }
    brief requires this to be one shared module, not a copy per page;
    this repo is static HTML with no bundler, so each page carries the
    same module verbatim as the closest static equivalent of "single
-   source". Swap MOCK_OFFERS for the real endpoint inside getOffers
+   source". Swap OFFERS for the real endpoint inside getOffers
    and getOffersByProvider only.
    ============================================================ */
 
@@ -914,209 +914,148 @@ var PROVIDERS = {
   "tabby":             { name: "Tabby",          initials: "TB", paymentPage: "https://laters.com/payment/tabby" },
   "tamara":            { name: "Tamara",         initials: "TM", paymentPage: "https://laters.com/payment/tamara" },
   "affirm":            { name: "Affirm",         initials: "AR", paymentPage: "https://laters.com/payment/affirm" },
-  "grab-paylater":     { name: "Grab PayLater",  initials: "GR", paymentPage: "https://laters.com/payment/grab-paylater" },
+  "grab-paylater":     { name: "Grab PayLater",  initials: "GR", paymentPage: "https://laters.com/payment/grab" },
   "shopee-pay-later":  { name: "ShopeePayLater", initials: "SP", paymentPage: "https://laters.com/payment/shopee-pay-later" },
-  "splitit":           { name: "Splitit",        initials: "SL", paymentPage: "https://laters.com/payment/splitit" }
+  "splitit":           { name: "Splitit",        initials: "SL", paymentPage: "https://laters.com/payment/splitit" },
+  "crypto":            { name: "Crypto",         initials: "CR", paymentPage: "https://laters.com/payment/crypto" }
 };
 
 var COUNTRIES = {
   "US": "United States",
   "GB": "United Kingdom",
+  "CA": "Canada",
   "AU": "Australia",
+  "NZ": "New Zealand",
+  "DE": "Germany",
+  "SE": "Sweden",
   "SG": "Singapore",
   "MY": "Malaysia",
   "ID": "Indonesia",
-  "AE": "United Arab Emirates"
+  "AE": "United Arab Emirates",
+  "SA": "Saudi Arabia"
 };
 
 var PROVIDER_KEY = "klarna";
 
-function hoursFromNow(h) { return new Date(Date.now() + h * 3600000).toISOString(); }
+/* ?payment= value each laters.com payment page passes to flight
+   search, read off the live pages on 10 Sep 2026. */
+var CHECKOUT_PARAM = {
+  "klarna": "klarna-stripe", "afterpay": "afterpay", "zip": "zip",
+  "tabby": "tabby", "grab-paylater": "grab", "crypto": "crypto"
+};
 
-/* Same mock set as the hub, byte for byte. */
-var MOCK_OFFERS = [
-  {
-    id: "o-001", slug: "klarna-8-percent-base-fare", paymentMethodKey: "klarna",
-    title: "8 percent off the base fare with Klarna",
-    summary: "Applies to the base fare on any route when you pay with Klarna at checkout.",
-    discountType: "percent", value: 8, currency: null, maxDiscount: 120, minSpend: 200,
-    code: "SAMPLE8", redemptionSteps: ["Search your route and pick a flight.", "Enter the code in the promo field at checkout.", "Select Klarna as your payment method."],
-    destinationUrl: "https://laters.com/?payment=klarna",
-    countries: ["US","GB","AU"], newUsersOnly: false, firstTransactionOnly: false,
-    startsAt: "2026-07-01T00:00:00Z", endsAt: "2026-09-30T23:59:00Z", timezone: "Europe/Stockholm", status: "live",
-    lastVerifiedAt: "2026-08-02", verifiedBy: "ops:priya", sourceUrl: "internal://offer-queue/o-001", complianceVerified: true
-  },
-  {
-    id: "o-002", slug: "klarna-12-percent-with-cancellation", paymentMethodKey: "klarna",
-    title: "12 percent off with the cancellation protection add on",
-    summary: "Higher discount when the booking includes cancellation protection.",
-    discountType: "percent", value: 12, currency: null, maxDiscount: 180, minSpend: 300,
-    code: "SAMPLE12", redemptionSteps: ["Add cancellation protection during checkout.", "Enter the code in the promo field.", "Select Klarna as your payment method."],
-    destinationUrl: "https://laters.com/?payment=klarna",
-    countries: ["US","GB","AU","SG"], newUsersOnly: false, firstTransactionOnly: false,
-    startsAt: "2026-07-01T00:00:00Z", endsAt: hoursFromNow(30), timezone: "Europe/Stockholm", status: "expiring_soon",
-    lastVerifiedAt: "2026-08-03", verifiedBy: "ops:priya", sourceUrl: "internal://offer-queue/o-002", complianceVerified: true
-  },
-  {
-    id: "o-003", slug: "klarna-cashback-app", paymentMethodKey: "klarna",
-    title: "Cashback on flights booked with Klarna",
-    summary: "A flat cashback rate on any flight paid for with Klarna this quarter.",
-    discountType: "cashback", value: 5, currency: null, maxDiscount: 40, minSpend: null,
-    code: null, redemptionSteps: ["Search your route and pick a flight.", "Select Klarna as your payment method.", "Cashback lands in your account within 5 business days."],
-    destinationUrl: "https://laters.com/?payment=klarna",
-    countries: ["US","GB"], newUsersOnly: false, firstTransactionOnly: false,
-    startsAt: "2026-06-15T00:00:00Z", endsAt: "2026-10-31T23:59:00Z", timezone: "Europe/Stockholm", status: "live",
-    lastVerifiedAt: "2026-07-29", verifiedBy: "ops:priya", sourceUrl: "internal://offer-queue/o-003", complianceVerified: true
-  },
-  {
-    id: "o-004", slug: "klarna-fee-waiver", paymentMethodKey: "klarna",
-    title: "No installment fees on flights over 300",
-    summary: "Standard plan fees waived automatically above the minimum spend.",
-    discountType: "fee_waiver", value: 0, currency: null, maxDiscount: null, minSpend: 300,
-    code: null, redemptionSteps: ["Search your route and pick a flight.", "Select Klarna and choose a 3 or 4 payment plan.", "The fee line shows as zero before you confirm."],
-    destinationUrl: "https://laters.com/?payment=klarna",
-    countries: ["US","GB","AU","SG"], newUsersOnly: false, firstTransactionOnly: false,
-    startsAt: "2026-07-01T00:00:00Z", endsAt: "2026-11-30T23:59:00Z", timezone: "Europe/Stockholm", status: "live",
-    lastVerifiedAt: "2026-08-01", verifiedBy: "ops:priya", sourceUrl: "internal://offer-queue/o-004", complianceVerified: true
-  },
-  {
-    id: "o-005", slug: "afterpay-25-off-first-flight", paymentMethodKey: "afterpay",
-    title: "25 AUD off your first flight with Afterpay",
-    summary: "First time Afterpay customers on Laters.com only, one use per account.",
-    discountType: "fixed", value: 25, currency: "AUD", maxDiscount: 25, minSpend: 150,
-    code: "SAMPLEAF25", redemptionSteps: ["Search your route and pick a flight.", "Enter the code in the promo field at checkout.", "Select Afterpay and complete the first instalment."],
-    destinationUrl: "https://laters.com/?payment=afterpay",
-    countries: ["AU"], newUsersOnly: true, firstTransactionOnly: true,
-    startsAt: "2026-07-10T00:00:00Z", endsAt: "2026-08-31T23:59:00Z", timezone: "Australia/Sydney", status: "live",
-    lastVerifiedAt: "2026-08-01", verifiedBy: "ops:dee", sourceUrl: "internal://offer-queue/o-005", complianceVerified: true
-  },
-  {
-    id: "o-006", slug: "afterpay-bundle-credit", paymentMethodKey: "afterpay",
-    title: "Flight and hotel bundle credit with Afterpay",
-    summary: "Book a flight and a hotel in one trip and receive a credit toward the stay.",
-    discountType: "bundled", value: 80, currency: "AUD", maxDiscount: 80, minSpend: 800,
-    code: "SAMPLEBUNDLE", redemptionSteps: ["Book a flight and add a hotel to the same trip.", "Enter the code in the promo field at checkout.", "Select Afterpay as your payment method."],
-    destinationUrl: "https://laters.com/?payment=afterpay",
-    countries: ["AU"], newUsersOnly: false, firstTransactionOnly: false,
-    startsAt: "2026-07-15T00:00:00Z", endsAt: "2026-11-15T23:59:00Z", timezone: "Australia/Sydney", status: "live",
-    lastVerifiedAt: "2026-07-31", verifiedBy: "ops:dee", sourceUrl: "internal://offer-queue/o-006", complianceVerified: true
-  },
-  {
-    id: "o-007", slug: "atome-15-off-flights", paymentMethodKey: "atome",
-    title: "15 percent off flights paid in 3 with Atome",
-    summary: "Split any flight into three payments and take 15 percent off the fare.",
-    discountType: "percent", value: 15, currency: null, maxDiscount: 60, minSpend: 250,
-    code: "SAMPLEATM15", redemptionSteps: ["Search your route and pick a flight.", "Enter the code in the promo field at checkout.", "Select Atome and approve the plan in the app."],
-    destinationUrl: "https://laters.com/?payment=atome",
-    countries: ["SG","MY","ID"], newUsersOnly: false, firstTransactionOnly: false,
-    startsAt: "2026-07-05T00:00:00Z", endsAt: hoursFromNow(120), timezone: "Asia/Singapore", status: "expiring_soon",
-    lastVerifiedAt: "2026-08-03", verifiedBy: "ops:hana", sourceUrl: "internal://offer-queue/o-007", complianceVerified: true
-  },
-  {
-    id: "o-008", slug: "atome-rm50-off-first-booking", paymentMethodKey: "atome",
-    title: "RM50 off your first Atome booking",
-    summary: "New Atome customers booking flights from Malaysia.",
-    discountType: "fixed", value: 50, currency: "MYR", maxDiscount: 50, minSpend: 400,
-    code: "SAMPLEMY50", redemptionSteps: ["Search your route and pick a flight.", "Enter the code in the promo field at checkout.", "Select Atome and complete first time verification."],
-    destinationUrl: "https://laters.com/?payment=atome",
-    countries: ["MY"], newUsersOnly: true, firstTransactionOnly: false,
-    startsAt: "2026-06-01T00:00:00Z", endsAt: "2026-12-31T23:59:00Z", timezone: "Asia/Kuala_Lumpur", status: "live",
-    lastVerifiedAt: "2026-07-25", verifiedBy: "ops:hana", sourceUrl: "internal://offer-queue/o-008", complianceVerified: true
-  },
-  {
-    id: "o-009", slug: "atome-cashback", paymentMethodKey: "atome",
-    title: "Cashback on flights with Atome",
-    summary: "A flat cashback rate credited to your Atome wallet.",
-    discountType: "cashback", value: 4, currency: null, maxDiscount: 50, minSpend: 200,
-    code: null, redemptionSteps: ["Search your route and pick a flight.", "Select Atome as your payment method.", "Cashback lands in your Atome wallet after the trip."],
-    destinationUrl: "https://laters.com/?payment=atome",
-    countries: ["SG"], newUsersOnly: false, firstTransactionOnly: false,
-    startsAt: "2026-07-01T00:00:00Z", endsAt: "2026-09-30T23:59:00Z", timezone: "Asia/Singapore", status: "live",
-    lastVerifiedAt: "2026-07-31", verifiedBy: "ops:hana", sourceUrl: "internal://offer-queue/o-009", complianceVerified: true
-  },
-  {
-    id: "o-010", slug: "zip-10-off-domestic", paymentMethodKey: "zip",
-    title: "10 percent off domestic flights with Zip",
-    summary: "Domestic routes only, capped per booking.",
-    discountType: "percent", value: 10, currency: null, maxDiscount: 45, minSpend: 120,
-    code: "SAMPLEZIP10", redemptionSteps: ["Search a domestic route and pick a flight.", "Enter the code in the promo field at checkout.", "Select Zip as your payment method."],
-    destinationUrl: "https://laters.com/?payment=zip",
-    countries: ["AU","US"], newUsersOnly: false, firstTransactionOnly: false,
-    startsAt: "2026-07-22T00:00:00Z", endsAt: "2026-09-05T23:59:00Z", timezone: "Australia/Sydney", status: "live",
-    lastVerifiedAt: "2026-07-28", verifiedBy: "ops:dee", sourceUrl: "internal://offer-queue/o-010", complianceVerified: true
-  },
-  {
-    id: "o-011", slug: "zip-fee-waiver", paymentMethodKey: "zip",
-    title: "No account fee for the first three months",
-    summary: "Applies automatically to new Zip accounts opened through Laters.com.",
-    discountType: "fee_waiver", value: 0, currency: null, maxDiscount: null, minSpend: null,
-    code: null, redemptionSteps: ["Open a Zip account through the link at checkout.", "The waiver is applied to your Zip account automatically."],
-    destinationUrl: "https://laters.com/?payment=zip",
-    countries: ["AU"], newUsersOnly: true, firstTransactionOnly: false,
-    startsAt: "2026-07-01T00:00:00Z", endsAt: "2026-10-06T23:59:00Z", timezone: "Australia/Sydney", status: "live",
-    lastVerifiedAt: "2026-08-02", verifiedBy: "ops:dee", sourceUrl: "internal://offer-queue/o-011", complianceVerified: true
-  },
-  {
-    id: "o-012", slug: "tabby-20-off-flights-uae", paymentMethodKey: "tabby",
-    title: "20 percent off flights with Tabby",
-    summary: "Split into four payments and take 20 percent off, capped per booking.",
-    discountType: "percent", value: 20, currency: null, maxDiscount: 200, minSpend: 500,
-    code: "SAMPLETB20", redemptionSteps: ["Search your route and pick a flight.", "Enter the code in the promo field at checkout.", "Select Tabby and approve in the app."],
-    destinationUrl: "https://laters.com/?payment=tabby",
-    countries: ["AE"], newUsersOnly: false, firstTransactionOnly: false,
-    startsAt: "2026-07-18T00:00:00Z", endsAt: "2026-08-25T23:59:00Z", timezone: "Asia/Dubai", status: "live",
-    lastVerifiedAt: "2026-08-03", verifiedBy: "ops:omar", sourceUrl: "internal://offer-queue/o-012", complianceVerified: true
-  },
-  {
-    id: "o-013", slug: "tamara-100-aed-off", paymentMethodKey: "tamara",
-    title: "AED 100 off flights with Tamara",
-    summary: "Flat discount on flight bookings paid in three instalments.",
-    discountType: "fixed", value: 100, currency: "AED", maxDiscount: 100, minSpend: 900,
-    code: "SAMPLETMR100", redemptionSteps: ["Search your route and pick a flight.", "Enter the code in the promo field at checkout.", "Select Tamara as your payment method."],
-    destinationUrl: "https://laters.com/?payment=tamara",
-    countries: ["AE"], newUsersOnly: false, firstTransactionOnly: false,
-    startsAt: "2026-07-12T00:00:00Z", endsAt: "2026-10-12T23:59:00Z", timezone: "Asia/Riyadh", status: "live",
-    lastVerifiedAt: "2026-07-26", verifiedBy: "ops:omar", sourceUrl: "internal://offer-queue/o-013", complianceVerified: true
-  },
-  {
-    id: "o-014", slug: "affirm-zero-apr-travel", paymentMethodKey: "affirm",
-    title: "Zero percent APR on travel over 12 months",
-    summary: "Selected fares qualify for a zero interest instalment plan, applied automatically at checkout when eligible.",
-    discountType: "fee_waiver", value: 0, currency: null, maxDiscount: null, minSpend: 400,
-    code: null, redemptionSteps: ["Search your route and pick a qualifying flight.", "Select Affirm at checkout.", "Eligible plans show a zero percent rate before you confirm."],
-    destinationUrl: "https://laters.com/?payment=affirm",
-    countries: ["US"], newUsersOnly: false, firstTransactionOnly: false,
-    startsAt: "2026-05-01T00:00:00Z", endsAt: "2026-12-31T23:59:00Z", timezone: "America/New_York", status: "live",
-    lastVerifiedAt: "2026-08-01", verifiedBy: "ops:priya", sourceUrl: "internal://offer-queue/o-014", complianceVerified: true
-  },
-  {
-    id: "o-015", slug: "affirm-30-off-first-purchase", paymentMethodKey: "affirm",
-    title: "USD 30 off your first Affirm purchase",
-    summary: "New Affirm customers, one use per account.",
-    discountType: "fixed", value: 30, currency: "USD", maxDiscount: 30, minSpend: 200,
-    code: "SAMPLEAFF30", redemptionSteps: ["Search your route and pick a flight.", "Enter the code in the promo field at checkout.", "Select Affirm and complete a first purchase."],
-    destinationUrl: "https://laters.com/?payment=affirm",
-    countries: ["US"], newUsersOnly: true, firstTransactionOnly: true,
-    startsAt: "2026-07-08T00:00:00Z", endsAt: "2026-09-08T23:59:00Z", timezone: "America/New_York", status: "live",
-    lastVerifiedAt: "2026-07-24", verifiedBy: "ops:priya", sourceUrl: "internal://offer-queue/o-015", complianceVerified: true
-  },
-  {
-    id: "o-016", slug: "grab-paylater-18-off", paymentMethodKey: "grab-paylater",
-    title: "18 percent off flights with Grab PayLater",
-    summary: "Pay next month with no upfront amount and take 18 percent off the fare.",
-    discountType: "percent", value: 18, currency: null, maxDiscount: 90, minSpend: 300,
-    code: "SAMPLEGRB18", redemptionSteps: ["Search your route and pick a flight.", "Enter the code in the promo field at checkout.", "Select Grab PayLater and confirm in the Grab app."],
-    destinationUrl: "https://laters.com/?payment=grab-paylater",
-    countries: ["SG","MY","ID"], newUsersOnly: false, firstTransactionOnly: false,
-    startsAt: "2026-07-14T00:00:00Z", endsAt: "2026-08-18T23:59:00Z", timezone: "Asia/Singapore", status: "live",
-    lastVerifiedAt: "2026-08-02", verifiedBy: "ops:hana", sourceUrl: "internal://offer-queue/o-016", complianceVerified: true
-  }
+/* Promo codes from the Laters.com promo code sheet (tab gid 111624536),
+   checked against the promo code block on each laters.com payment page
+   on 10 Sep 2026. Neither source publishes start dates, end dates or
+   caps, so those fields stay null and cards read "No end date listed".
+   Left out: Clearpay's CLEARPAY20/40/100 (ended 31 Dec 2025) and every
+   provider the sheet marks "None found".
+   Countries: Afterpay and Zip codes name their market and currency.
+   Klarna and Tabby codes don't, so they follow the markets listed on
+   those provider pages. Grab's "$" amounts are read as SGD, the only
+   dollar market in Grab's coverage. Crypto has no country limit.
+   lastVerifiedAt, verifiedBy, sourceUrl and complianceVerified are
+   internal-only: the UI layer below never reads them for rendering. */
+
+var BASE_FARE = "Applies to the base fare only, not taxes and fees.";
+
+function makeOffer(o) {
+  var name = PROVIDERS[o.provider].name;
+  return {
+    id: o.code.toLowerCase(), slug: o.slug, paymentMethodKey: o.provider,
+    title: o.title, summary: o.summary,
+    discountType: o.type, value: o.value, currency: o.currency || null, maxDiscount: null, minSpend: o.minSpend || null,
+    code: o.code,
+    redemptionSteps: ["Search your route and pick a flight."]
+      .concat(o.extraStep ? [o.extraStep] : [])
+      .concat(["Enter " + o.code + " in the promo box at checkout.", o.payStep || "Choose " + name + " as your payment method."]),
+    destinationUrl: "https://laters.com/?payment=" + CHECKOUT_PARAM[o.provider],
+    countries: o.countries, newUsersOnly: false, firstTransactionOnly: false,
+    startsAt: null, endsAt: null, timezone: null, status: "live",
+    lastVerifiedAt: "2026-09-10", verifiedBy: null, sourceUrl: PROVIDERS[o.provider].paymentPage, complianceVerified: false
+  };
+}
+
+/* One sheet row with a flat amount off: provider, code, amount, currency, min spend, market, note. */
+function fixedOffer(provider, code, value, currency, minSpend, country, note) {
+  return makeOffer({
+    provider: provider, code: code, type: "fixed", value: value, currency: currency, minSpend: minSpend, countries: [country],
+    slug: provider + "-" + currency.toLowerCase() + "-" + value + "-off",
+    title: currency + " " + value + " off flights with " + PROVIDERS[provider].name,
+    summary: note
+  });
+}
+
+var AU_ONLY = BASE_FARE + " Australia, AUD bookings only.";
+var US_ONLY = BASE_FARE + " United States, USD bookings only.";
+var NZ_ONLY = BASE_FARE + " New Zealand, NZD bookings only.";
+var CA_ONLY = BASE_FARE + " Canada, CAD bookings only.";
+var GRAB_ONLY = "Valid only on PayLater by Grab payments. The same codes are also handed out in the Grab app.";
+var KLARNA_MARKETS = ["US", "GB", "DE", "SE", "AU"];
+
+var OFFERS = [
+  fixedOffer("afterpay", "AFTERPAY25",     25,  "AUD", 500,  "AU", AU_ONLY),
+  fixedOffer("afterpay", "AFTERPAY50",     50,  "AUD", 1000, "AU", AU_ONLY),
+  fixedOffer("afterpay", "AFTERPAY100",    100, "AUD", 2000, "AU", AU_ONLY),
+  fixedOffer("afterpay", "AFTERPAY200",    200, "AUD", 3000, "AU", AU_ONLY),
+  fixedOffer("afterpay", "AFTERPAY25USD",  25,  "USD", 500,  "US", US_ONLY),
+  fixedOffer("afterpay", "AFTERPAY50USD",  50,  "USD", 1000, "US", US_ONLY),
+  fixedOffer("afterpay", "AFTERPAY100USD", 100, "USD", 2000, "US", US_ONLY),
+  fixedOffer("afterpay", "AFTERPAY200USD", 200, "USD", 3000, "US", US_ONLY),
+  fixedOffer("afterpay", "AFTERPAYNZ50",   50,  "NZD", 500,  "NZ", NZ_ONLY),
+  fixedOffer("afterpay", "AFTERPAYNZ100",  100, "NZD", 1000, "NZ", NZ_ONLY),
+  fixedOffer("afterpay", "AFTERPAYCA25",   25,  "CAD", 500,  "CA", CA_ONLY),
+  fixedOffer("afterpay", "AFTERPAYCA50",   50,  "CAD", 1000, "CA", CA_ONLY),
+  fixedOffer("afterpay", "AFTERPAYCA100",  100, "CAD", 2000, "CA", CA_ONLY),
+  fixedOffer("afterpay", "AFTERPAYCA200",  200, "CAD", 3000, "CA", CA_ONLY),
+
+  fixedOffer("zip", "ZIPAU25",    25,  "AUD", 250,  "AU", AU_ONLY),
+  fixedOffer("zip", "ZIPAU50",    50,  "AUD", 500,  "AU", AU_ONLY),
+  fixedOffer("zip", "ZIPAU100",   100, "AUD", 1000, "AU", AU_ONLY),
+  fixedOffer("zip", "ZIP25USD",   25,  "USD", 500,  "US", US_ONLY),
+  fixedOffer("zip", "ZIP50USD",   50,  "USD", 1000, "US", US_ONLY),
+  fixedOffer("zip", "ZIP100USD",  100, "USD", 2000, "US", US_ONLY),
+  fixedOffer("zip", "ZIP200USD",  200, "USD", 3000, "US", US_ONLY),
+  fixedOffer("zip", "ZIPNZFF50",  50,  "NZD", 500,  "NZ", NZ_ONLY),
+  fixedOffer("zip", "ZIPNZFF100", 100, "NZD", 1000, "NZ", NZ_ONLY),
+
+  makeOffer({
+    provider: "klarna", code: "KLARNA8", type: "percent", value: 8, countries: KLARNA_MARKETS,
+    slug: "klarna-8-percent-off", title: "8% off the base fare with Klarna",
+    summary: "No minimum spend listed. Base fare only, not taxes, carrier charges, baggage or add-ons. One code per booking."
+  }),
+  makeOffer({
+    provider: "klarna", code: "KLARNA12", type: "percent", value: 12, countries: KLARNA_MARKETS,
+    slug: "klarna-12-percent-off", title: "12% off the base fare with Klarna when you add cancellation protection",
+    summary: "The higher rate needs cancellation protection on the booking. Base fare only, not taxes, carrier charges, baggage or add-ons. One code per booking.",
+    extraStep: "Add cancellation protection to your booking."
+  }),
+
+  fixedOffer("grab-paylater", "LATERSGRAB25",  25,  "SGD", 300,  "SG", GRAB_ONLY),
+  fixedOffer("grab-paylater", "LATERSGRAB50",  50,  "SGD", 700,  "SG", GRAB_ONLY),
+  fixedOffer("grab-paylater", "LATERSGRAB100", 100, "SGD", 1300, "SG", GRAB_ONLY),
+
+  makeOffer({
+    provider: "tabby", code: "TABBYFLYFAIRLY", type: "percent", value: 8, countries: ["AE", "SA"],
+    slug: "tabby-8-percent-off", title: "8% off the base fare with Tabby",
+    summary: "No minimum spend listed. " + BASE_FARE + " Can't be combined with other codes."
+  }),
+
+  makeOffer({
+    provider: "crypto", code: "FlyFurtherCrypto", type: "percent", value: 7.5, countries: Object.keys(COUNTRIES),
+    slug: "crypto-7-5-percent-off", title: "7.5% off the base fare when you pay with crypto",
+    summary: BASE_FARE + " Pay with Bitcoin, Ethereum, USDT, USDC or another supported coin.",
+    payStep: "Choose Cryptocurrency as your payment method."
+  })
 ];
 
+/* ---- the only two functions that touch the source ---- */
+
+/* An offer with no endsAt has no published end date and stays live. */
 function getOffers() {
   var now = new Date();
-  return MOCK_OFFERS.filter(function (o) {
-    return o.status !== "expired" && o.status !== "paused" && new Date(o.endsAt).getTime() > now.getTime();
+  return OFFERS.filter(function (o) {
+    return o.status !== "expired" && o.status !== "paused" && (!o.endsAt || new Date(o.endsAt).getTime() > now.getTime());
   });
 }
 function getOffersByProvider(key) {
@@ -1146,9 +1085,10 @@ function getOffersByProvider(key) {
     if (window.console && console.debug) { console.debug("[analytics]", event, data); }
   }
 
-  function endDate(offer) { return new Date(offer.endsAt); }
-  function isExpired(offer) { return endDate(offer).getTime() <= new Date().getTime(); }
-  function msLeft(offer) { return endDate(offer).getTime() - new Date().getTime(); }
+  /* endsAt is null when no end date is published: the offer never expires or counts as ending soon. */
+  function endDate(offer) { return offer.endsAt ? new Date(offer.endsAt) : null; }
+  function isExpired(offer) { var d = endDate(offer); return d !== null && d.getTime() <= new Date().getTime(); }
+  function msLeft(offer) { var d = endDate(offer); return d === null ? Infinity : d.getTime() - new Date().getTime(); }
 
   function fmtDate(value, tz) {
     var opts = { day: "numeric", month: "short", year: "numeric" };
@@ -1159,6 +1099,7 @@ function getOffersByProvider(key) {
 
   function expiryInfo(offer) {
     var iso = offer.endsAt;
+    if (!iso) { return { text: "No end date listed", soon: false, expired: false, iso: null }; }
     if (isExpired(offer)) { return { text: "Offer has ended", soon: false, expired: true, iso: iso }; }
     var left = msLeft(offer);
     if (left > 7 * DAY) { return { text: "Ends " + fmtDate(iso, offer.timezone), soon: false, expired: false, iso: iso }; }
@@ -1291,10 +1232,12 @@ function getOffersByProvider(key) {
     if (expiry.soon) {
       expRow.appendChild(el("span", "ends-soon", expiry.text));
       expRow.appendChild(el("span", "sr-only", " Exact end date: " + fmtDate(offer.endsAt, offer.timezone) + "."));
-    } else {
+    } else if (expiry.iso) {
       var t = el("time", null, expiry.text);
-      t.setAttribute("datetime", offer.endsAt);
+      t.setAttribute("datetime", expiry.iso);
       expRow.appendChild(t);
+    } else {
+      expRow.appendChild(el("span", null, expiry.text));
     }
     meta.appendChild(expRow);
 
@@ -1487,11 +1430,11 @@ function getOffersByProvider(key) {
               "name": o.title,
               "description": o.summary,
               "url": "https://laters.com/deals/klarna#" + o.slug,
-              "availabilityStarts": o.startsAt,
-              "availabilityEnds": o.endsAt,
               "eligibleRegion": o.countries.map(function (c) { return { "@type": "Country", "identifier": c, "name": COUNTRIES[c] || c }; }),
               "offeredBy": { "@type": "Organization", "name": PROVIDERS[o.paymentMethodKey].name }
             };
+            if (o.startsAt) { offer.availabilityStarts = o.startsAt; }
+            if (o.endsAt) { offer.availabilityEnds = o.endsAt; }
             if (o.code) { offer.discountCode = o.code; }
             if (o.minSpend && o.currency) { offer.eligibleTransactionVolume = { "@type": "PriceSpecification", "minPrice": o.minSpend, "priceCurrency": o.currency }; }
             return { "@type": "ListItem", "position": i + 1, "item": offer };
