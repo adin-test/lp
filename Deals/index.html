@@ -39,7 +39,11 @@
   /* lp-kit colour tokens */
   --kq-ink: #090315;
   --kq-page: #fff;
-  --kq-pink: hsl(342 100% 63%);
+  /* The live site splits the accent by surface: a pastel pink that reads on
+     the dark ink chrome, and a saturated rose that still passes contrast on
+     white. Using one value for both was the old design. */
+  --kq-pink: hsl(344 100% 85%);
+  --kq-pink-on-light: hsl(344 100% 46%);
   --kq-good: #1a7f52;
   --kq-warn: #b75000;
   --kq-invert: #090315;
@@ -141,6 +145,12 @@ a { color: inherit; }
   font: 600 14px var(--font-sans); text-decoration: none; cursor: pointer; transition: opacity var(--kq-ease);
 }
 .btn-search:hover { opacity: .86; }
+.topbar-pills {
+  display: inline-flex; align-items: center; overflow: hidden;
+  border: 1px solid var(--kq-on-ink-line); border-radius: var(--kq-radius-pill);
+}
+.topbar-pills span { padding: 7px 13px; font: 700 12px var(--font-sans); letter-spacing: .02em; color: var(--kq-on-ink); }
+.topbar-pills span + span { border-left: 1px solid var(--kq-on-ink-line); }
 
 /* ---------- hero ----------
    Matches the live kx-hero-tight hero used on /payment/klarna and the
@@ -314,8 +324,15 @@ a { color: inherit; }
   color: #4b4b4b;
   padding: 12px 0;
 }
-.crumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
-.crumbs li + li::before { content: "/"; margin-right: 8px; opacity: .5; }
+.crumbs ol { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; padding: 0; }
+.crumbs li { display: inline-flex; align-items: center; gap: 6px; }
+/* lucide chevron-right, matching the live breadcrumb separator */
+.crumbs li + li::before {
+  content: ""; flex: 0 0 auto; width: 13px; height: 13px; opacity: .55;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 18 6-6-6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 18 6-6-6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+}
 .crumbs a { text-decoration: none; color: inherit; }
 .crumbs a:hover { text-decoration: underline; }
 .crumbs [aria-current="page"] { color: var(--kq-ink); font-weight: 700; }
@@ -334,9 +351,11 @@ a { color: inherit; }
 
 .section { padding: 56px 0; }
 .section + .section { padding-top: 0; }
-.section-head { margin-bottom: 28px; }
-.section-head h2 { font-size: clamp(26px, 4vw, 40px); line-height: .92; }
-.section-head p { margin: 14px 0 0; max-width: 42rem; font-size: var(--kq-text); line-height: var(--kq-lh); }
+/* Live section heads are centered under a rotated eyebrow sticker,
+   at a noticeably bigger display clamp than we had. */
+.section-head { margin-bottom: 32px; text-align: center; }
+.section-head h2 { font-size: clamp(30px, 4.1vw, 48px); line-height: .88; margin-inline: auto; }
+.section-head p { margin: 18px auto 0; max-width: 44rem; font-size: var(--kq-text); line-height: var(--kq-lh); text-wrap: pretty; }
 
 /* ---------- comparison table ---------- */
 
@@ -387,7 +406,7 @@ a { color: inherit; }
 .result-line strong { font-variant-numeric: tabular-nums; }
 .btn-reset {
   border: 0; background: none; padding: 0; font: 600 var(--kq-text-sm) var(--font-sans); color: var(--kq-ink); cursor: pointer;
-  text-decoration: underline; text-decoration-color: var(--kq-pink); text-decoration-thickness: 2px; text-underline-offset: 3px;
+  text-decoration: underline; text-decoration-color: var(--kq-pink-on-light); text-decoration-thickness: 2px; text-underline-offset: 3px;
 }
 .btn-reset:hover { text-decoration-color: var(--kq-ink); }
 
@@ -539,10 +558,85 @@ a { color: inherit; }
 .toast.is-on { opacity: 1; transform: translateX(-50%) translateY(0); }
 @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
 
+/* ---------- announcement band ----------
+   The live site's rotated claims strip. It bleeds past both edges, sits on
+   the dark chrome between the topbar and the hero, and carries provider
+   tiles that overhang the band. */
+
+.kxa { position: relative; height: 104px; background: var(--kq-ink); overflow: hidden; pointer-events: none; }
+.kxa-band {
+  position: absolute; left: -8%; right: -8%; top: 50%;
+  transform: translateY(-50%) rotate(-1.3deg);
+  height: 52px; background: var(--kq-pink);
+  display: flex; align-items: center; justify-content: center; gap: 22px;
+  box-shadow: 0 3px rgba(9, 3, 21, .35);
+}
+.kxa-claims { display: flex; align-items: center; gap: 26px; white-space: nowrap; }
+.kxa-band span {
+  font-family: var(--font-display); font-weight: 900; font-size: 1.05rem; line-height: 1;
+  letter-spacing: -.01em; text-transform: uppercase; color: var(--kq-ink); white-space: nowrap;
+}
+.kxa-lock { display: inline-flex; align-items: center; gap: 10px; height: 0; flex: 0 0 auto; }
+/* Scoped under .kxa-band: the band's own `span` rule is more specific
+   than a bare .kxa-tile and would repaint these in ink on ink. */
+.kxa-band .kxa-tile {
+  flex: 0 0 auto; width: 58px; height: 58px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 15%; outline: 4px solid var(--kq-page);
+  background: var(--kq-ink); color: var(--kq-page);
+  font: 900 19px/1 var(--font-display); letter-spacing: .02em; text-transform: uppercase;
+  filter: drop-shadow(-3px 4.5px rgba(9, 3, 21, .32));
+}
+.kxa-band .kxa-t-1 { transform: rotate(-6deg); z-index: 1; }
+.kxa-band .kxa-t-2 { transform: rotate(5deg); z-index: 2; margin-left: -16px; }
+
+/* ---------- eyebrow sticker ----------
+   Rotated label above every section head on the live site. */
+
+.eyebrow-row { display: flex; justify-content: center; margin: 0 0 32px; }
+.eyebrow {
+  display: inline-block; background: var(--kq-ink); padding: 4px;
+  transform: rotate(-2deg); box-shadow: 6px 6px 0 rgb(0, 0, 0);
+}
+.eyebrow > span {
+  display: block; background: var(--kq-pink); color: var(--kq-ink);
+  font-family: var(--font-display); font-weight: 900; font-size: .8rem;
+  letter-spacing: -.05em; text-transform: uppercase; line-height: 1.5; padding: 8px 24px;
+}
+
+/* ---------- byline bar ---------- */
+
+.byline-bar { border-bottom: 1px solid var(--kq-line); }
+.byline {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 0 10px;
+  margin: 0; padding: 16px 0 18px;
+  font-size: var(--kq-text-xs); font-weight: 700;
+  letter-spacing: var(--kq-track-caps); text-transform: uppercase; color: var(--kq-ink);
+}
+.byline a {
+  color: inherit; text-decoration: underline;
+  text-decoration-color: var(--kq-pink-on-light); text-decoration-thickness: 2px; text-underline-offset: 3px;
+}
+.byline-when::before { content: "\00b7"; margin-right: 10px; }
+.byline time { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ---------- small group label ---------- */
+
+.kx-group {
+  font-family: var(--font-display); font-size: 15px; font-weight: 900;
+  text-transform: uppercase; letter-spacing: var(--kq-track-caps); color: var(--kq-ink);
+  border-bottom: 1px solid var(--kq-card-line); padding-bottom: 12px; margin: 0 0 16px;
+}
+
 /* ---------- responsive ---------- */
 
 @media (max-width: 768px) {
   .section { padding: 44px 0; }
+  .kxa { height: 84px; }
+  .kxa-band { height: 40px; gap: 12px; }
+  .kxa-band span { font-size: .8rem; }
+  .kxa-claims { gap: 14px; }
+  .kxa-tile { width: 48px; height: 48px; font-size: 16px; }
   .hero { padding-bottom: 32px; }
   .crosslink { padding: 24px; box-shadow: 7px 7px 0 0 var(--kq-pink); }
   .vs th, .vs td { padding: 12px 14px; }
@@ -559,6 +653,10 @@ a { color: inherit; }
 
 @media (max-width: 480px) {
   :root { --gutter: 18px; }
+  .kxa { height: 74px; }
+  /* Only the first claim survives at phone width, as on the live band. */
+  .kxa-claims span:nth-child(n+2) { display: none; }
+  .topbar-pills { display: none; }
   .topbar-inner { height: 56px; }
   .btn-search { padding: 0 14px; font-size: 13px; }
   .hero h1 { font-size: clamp(2rem, 11vw, 3rem); }
@@ -588,10 +686,30 @@ a { color: inherit; }
       <img src="media/laters-logo.svg" alt="Laters.com" width="150" height="36">
     </a>
     <div class="topbar-actions">
+      <span class="topbar-pills" aria-hidden="true"><span>IDR</span><span>EN</span></span>
       <a class="btn-search" href="https://laters.com/">Search flights</a>
     </div>
   </div>
 </header>
+
+<!-- ======================= announcement band ======================= -->
+<!-- The live site's rotated pink claims strip, bleeding past both edges
+     with provider tiles overhanging it. -->
+<div class="kxa" aria-hidden="true">
+  <div class="kxa-band">
+    <span class="kxa-claims">
+      <span>600+ airlines available</span>
+      <span class="kxa-dot">&#10022;</span>
+      <span>No hidden booking fees</span>
+      <span class="kxa-dot">&#10022;</span>
+      <span>Multiple providers, one search</span>
+    </span>
+    <span class="kxa-lock">
+        <span class="kxa-tile kxa-t-1">KL</span>
+        <span class="kxa-tile kxa-t-2">AF</span>
+    </span>
+  </div>
+</div>
 
 <!-- ======================= hero ======================= -->
 <!-- Mirrors the live /payment/klarna hero: kx-hero-tight, dark ink,
@@ -653,6 +771,16 @@ a { color: inherit; }
   </div>
 </div>
 
+<!-- ======================= byline ======================= -->
+<div class="byline-bar">
+  <div class="shell">
+    <p class="byline">
+      <span class="byline-who">Promo codes from the Laters.com promo sheet</span>
+      <span class="byline-when">Updated <time datetime="2026-09-15">15 September 2026</time></span>
+    </p>
+  </div>
+</div>
+
 <!-- ======================= sample data band ======================= -->
 <div class="databand">
   <div class="shell databand-inner">
@@ -699,6 +827,7 @@ a { color: inherit; }
   <section class="section" aria-labelledby="best-heading">
     <div class="shell">
       <div class="section-head">
+        <div class="eyebrow-row"><span class="eyebrow"><span>Compare providers</span></span></div>
         <h2 id="best-heading">Best offer per provider today</h2>
         <p>One row per provider, ranked by what the offer is worth. Every offer here is redeemable at Laters, so this is the fastest way to see which pay later method gives you the most on a booking right now.</p>
       </div>
@@ -726,6 +855,7 @@ a { color: inherit; }
   <section class="section" aria-labelledby="all-heading">
     <div class="shell">
       <div class="section-head">
+        <div class="eyebrow-row"><span class="eyebrow"><span>Every live code</span></span></div>
         <h2 id="all-heading">All live offers</h2>
         <p>Filter by provider. Filters stay in the address bar so you can share a filtered view.</p>
       </div>
@@ -772,6 +902,7 @@ a { color: inherit; }
   <section class="section" aria-labelledby="providers-heading">
     <div class="shell">
       <div class="section-head">
+        <div class="eyebrow-row"><span class="eyebrow"><span>By provider</span></span></div>
         <h2 id="providers-heading">Browse by provider</h2>
         <p>Each provider page carries its live offers plus its standing benefits, such as plan structure and fees, for when nothing is currently running.</p>
       </div>
@@ -799,6 +930,7 @@ a { color: inherit; }
   <section class="section" aria-labelledby="faq-heading">
     <div class="shell">
       <div class="section-head">
+        <div class="eyebrow-row"><span class="eyebrow"><span>Promo code FAQ</span></span></div>
         <h2 id="faq-heading">Promo code questions</h2>
       </div>
       <div class="faq">
@@ -1235,7 +1367,7 @@ function getOffersByProvider(key) {
       if (!expired) {
         var copyBtn = el("button", "code-copy");
         copyBtn.type = "button";
-        copyBtn.textContent = "Copy";
+        copyBtn.textContent = "Tap to copy";
         copyBtn.setAttribute("aria-label", "Copy code " + offer.code);
         copyBtn.addEventListener("click", function () { doCopy(offer, copyBtn, li); });
         codeRow.appendChild(copyBtn);
@@ -1317,8 +1449,8 @@ function getOffersByProvider(key) {
     function done() {
       if (button) {
         button.classList.add("is-copied");
-        button.textContent = "Copied";
-        window.setTimeout(function () { button.classList.remove("is-copied"); button.textContent = "Copy"; }, 2000);
+        button.textContent = "Copied \u270c\ufe0f";
+        window.setTimeout(function () { button.classList.remove("is-copied"); button.textContent = "Tap to copy"; }, 2000);
       }
       announce("Code " + code + " copied to your clipboard.");
       showToast("Code copied");
