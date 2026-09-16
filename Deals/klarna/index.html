@@ -3,8 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Klarna Promo Codes 2026: 2 Live Offers | Laters.com</title>
-<meta name="description" content="Every live Klarna promo code on Laters.com, plus Klarna's standing plans, fees, and country availability. Copy a code and search flights in one action.">
+<title>Klarna Promo Codes for Flights | Laters.com</title>
+<meta name="description" content="Every live Klarna promo code for flights on Laters.com, plus Klarna's Pay in 4 and monthly financing terms. Copy a code and search flights in one action.">
+
+<!-- Finding 08: sharing. TODO: generate /og/deals.png with the live offer
+     count baked in, add og:image, then switch twitter:card to summary_large_image. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Laters.com">
+<meta property="og:title" content="Klarna Promo Codes for Flights | Laters.com">
+<meta property="og:description" content="Every live Klarna promo code for flights on Laters.com, plus Klarna's Pay in 4 and monthly financing terms. Copy a code and search flights in one action.">
+<meta property="og:url" content="https://laters.com/deals/klarna">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23090315'/%3E%3Cpath d='M11 8v13h10' stroke='%23ffb3c7' stroke-width='3.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" type="image/svg+xml">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://laters.com/deals/klarna">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -560,7 +570,7 @@ a { color: inherit; }
 
 .site-footer { background: var(--kq-ink); color: var(--kq-on-ink); margin-top: 64px; padding: 48px 0 40px; }
 .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 32px; }
-.footer-col h3 { font-size: var(--kq-text-xs); font-family: var(--font-sans); letter-spacing: var(--kq-track-caps); font-weight: 700; margin-bottom: 12px; opacity: .72; }
+.footer-col h3, .footer-col .footer-h { font-size: var(--kq-text-xs); font-family: var(--font-sans); letter-spacing: var(--kq-track-caps); font-weight: 700; margin-bottom: 12px; opacity: .72; }
 .footer-col ul { list-style: none; margin: 0; padding: 0; }
 .footer-col li + li { margin-top: 8px; }
 .footer-col a { font-size: var(--kq-text-sm); text-decoration: none; opacity: .82; }
@@ -962,7 +972,7 @@ a { color: inherit; }
         <details class="faq-item">
           <summary>What happens when a Klarna offer ends?</summary>
           <div class="answer">
-            <p>It stops rendering everywhere on the site automatically, including this page, the moment it expires. There is no separate archive of past Klarna codes.</p>
+            <p>Klarna's codes carry no published end date, so they do not expire on a timer. Each one is re-checked against Klarna's payment page on Laters.com, and a code Klarna has withdrawn comes off at the next check. There is no separate archive of past Klarna codes.</p>
           </div>
         </details>
 
@@ -982,9 +992,10 @@ a { color: inherit; }
 <!-- ======================= footer ======================= -->
 <footer class="site-footer on-ink">
   <div class="shell">
+    <h2 class="sr-only">Site links</h2>
     <div class="footer-grid">
       <div class="footer-col">
-        <h3>Pay later</h3>
+        <p class="footer-h">Pay later</p>
         <ul>
           <li><a href="https://laters.com/payment/klarna">Klarna</a></li>
           <li><a href="https://laters.com/payment/afterpay">Afterpay</a></li>
@@ -993,7 +1004,7 @@ a { color: inherit; }
         </ul>
       </div>
       <div class="footer-col">
-        <h3>Deals</h3>
+        <p class="footer-h">Deals</p>
         <ul>
           <li><a href="https://laters.com/deals">All live offers</a></li>
           <li><a href="https://laters.com/deals#providers-heading">Browse by provider</a></li>
@@ -1001,7 +1012,7 @@ a { color: inherit; }
         </ul>
       </div>
       <div class="footer-col">
-        <h3>Company</h3>
+        <p class="footer-h">Company</p>
         <ul>
           <li><a href="https://laters.com/about">About us</a></li>
           <li><a href="https://laters.com/blog">Blog</a></li>
@@ -1009,7 +1020,7 @@ a { color: inherit; }
         </ul>
       </div>
       <div class="footer-col">
-        <h3>Legal</h3>
+        <p class="footer-h">Legal</p>
         <ul>
           <li><a href="https://laters.com/terms">Terms</a></li>
           <li><a href="https://laters.com/privacy">Privacy</a></li>
@@ -1204,6 +1215,10 @@ function getOffersByProvider(key) {
 
 (function () {
   "use strict";
+
+  /* The production URL for this page. Schema and the canonical are built
+     from it so the preview host never leaks into either. */
+  var PAGE_URL = "https://laters.com/deals/klarna";
 
   var DAY = 86400000;
   var STATE = { country: null };
@@ -1539,9 +1554,21 @@ function getOffersByProvider(key) {
      an FAQ block on-page. */
 
   function renderJsonLd(shown) {
+    /* Finding 05. dateModified on a page whose pitch is freshness. */
+    var lastVerified = getOffers().reduce(function (m, o) {
+      return (o.lastVerifiedAt && o.lastVerifiedAt > m) ? o.lastVerifiedAt : m;
+    }, "");
+
     var graph = {
       "@context": "https://schema.org",
       "@graph": [
+        {
+          "@type": "WebPage",
+          "@id": PAGE_URL,
+          "url": PAGE_URL,
+          "name": document.title,
+          "dateModified": lastVerified || undefined
+        },
         {
           "@type": "BreadcrumbList",
           "itemListElement": [
@@ -1560,7 +1587,8 @@ function getOffersByProvider(key) {
               "@type": "Offer",
               "name": o.title,
               "description": o.summary,
-              "url": "https://laters.com/deals/klarna#" + o.slug,
+              /* Finding 05. Fragment must match the DOM id the card is given. */
+              "url": PAGE_URL + "#offer-" + o.id,
               "eligibleRegion": o.countries.map(function (c) { return { "@type": "Country", "identifier": c, "name": COUNTRIES[c] || c }; }),
               "offeredBy": { "@type": "Organization", "name": PROVIDERS[o.paymentMethodKey].name }
             };
@@ -1594,7 +1622,11 @@ function getOffersByProvider(key) {
       (here.length ? here.length + " live Klarna offer" + (here.length === 1 ? "" : "s") + " on Laters.com today" : "No live Klarna offer right now") +
       ", copied and applied at checkout in one place.";
 
-    document.title = "Klarna Promo Codes " + new Date().getFullYear() + ": " + here.length + " Live Offer" + (here.length === 1 ? "" : "s") + " | Laters.com";
+    var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var now = new Date();
+    document.title = "Klarna Promo Codes: " + here.length + " Live Code"
+      + (here.length === 1 ? "" : "s") + " (" + MONTHS[now.getMonth()] + " "
+      + now.getFullYear() + ") | Laters.com";
 
     var grid = document.querySelector("[data-grid]");
     grid.innerHTML = "";

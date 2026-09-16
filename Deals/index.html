@@ -3,8 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Payment Promo Codes and Deals 2026 | Laters.com</title>
-<meta name="description" content="Live promo codes from every pay later provider we support. Copy a code and search flights in one action, no expired offers, no third-party listings.">
+<title>Pay Later Flight Deals: Live Promo Codes | Laters.com</title>
+<meta name="description" content="Live promo codes for pay later flights with Klarna, Afterpay, Zip and more. Copy a code and search flights in one action.">
+
+<!-- Finding 08: sharing. TODO: generate /og/deals.png with the live offer
+     count baked in, add og:image, then switch twitter:card to summary_large_image. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Laters.com">
+<meta property="og:title" content="Pay Later Flight Deals: Live Promo Codes | Laters.com">
+<meta property="og:description" content="Live promo codes for pay later flights with Klarna, Afterpay, Zip and more. Copy a code and search flights in one action.">
+<meta property="og:url" content="https://laters.com/deals">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23090315'/%3E%3Cpath d='M11 8v13h10' stroke='%23ffb3c7' stroke-width='3.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" type="image/svg+xml">
 <meta name="robots" id="robots-meta" content="index, follow">
 <link rel="canonical" id="canonical-link" href="https://laters.com/deals">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -541,7 +551,7 @@ a { color: inherit; }
 
 .site-footer { background: var(--kq-ink); color: var(--kq-on-ink); margin-top: 64px; padding: 48px 0 40px; }
 .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 32px; }
-.footer-col h3 { font-size: var(--kq-text-xs); font-family: var(--font-sans); letter-spacing: var(--kq-track-caps); font-weight: 700; margin-bottom: 12px; opacity: .72; }
+.footer-col h3, .footer-col .footer-h { font-size: var(--kq-text-xs); font-family: var(--font-sans); letter-spacing: var(--kq-track-caps); font-weight: 700; margin-bottom: 12px; opacity: .72; }
 .footer-col ul { list-style: none; margin: 0; padding: 0; }
 .footer-col li + li { margin-top: 8px; }
 .footer-col a { font-size: var(--kq-text-sm); text-decoration: none; opacity: .82; }
@@ -719,7 +729,7 @@ a { color: inherit; }
   <div class="shell">
 
     <div class="hero-center">
-      <h1>Payment promo <span class="accent">codes</span></h1>
+      <h1>Pay later flight <span class="accent">deals</span></h1>
       <p class="hero-sub">Search and compare fares on Laters.com, then copy a live promo code from your pay later provider and apply it at checkout.</p>
     </div>
 
@@ -952,7 +962,7 @@ a { color: inherit; }
         <details class="faq-item">
           <summary>Are these offers really live?</summary>
           <div class="answer">
-            <p>Every offer that reaches this page has been through our own review queue before publishing. Nothing here is scraped from a provider's site or a third party. If an offer's end date passes, it stops rendering everywhere on the site, including this page, automatically.</p>
+            <p>Every offer here has been through our own review queue before publishing, and none of it is scraped from a provider's site or a third party. None of these codes carries a published end date, so none of them expires on a timer. Each one is re-checked against the provider's own payment page, and a code the provider has withdrawn comes off at the next check.</p>
           </div>
         </details>
 
@@ -979,9 +989,10 @@ a { color: inherit; }
 <!-- ======================= footer ======================= -->
 <footer class="site-footer on-ink">
   <div class="shell">
+    <h2 class="sr-only">Site links</h2>
     <div class="footer-grid">
       <div class="footer-col">
-        <h3>Pay later</h3>
+        <p class="footer-h">Pay later</p>
         <ul>
           <li><a href="https://laters.com/payment/klarna">Klarna</a></li>
           <li><a href="https://laters.com/payment/afterpay">Afterpay</a></li>
@@ -990,15 +1001,15 @@ a { color: inherit; }
         </ul>
       </div>
       <div class="footer-col">
-        <h3>Deals</h3>
+        <p class="footer-h">Deals</p>
         <ul>
-          <li><a href="./">All live offers</a></li>
+          <li><a href="./" data-deals-home>All live offers</a></li>
           <li><a href="#providers-heading">Browse by provider</a></li>
           <li><a href="#faq-heading">How codes work</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h3>Company</h3>
+        <p class="footer-h">Company</p>
         <ul>
           <li><a href="https://laters.com/about">About us</a></li>
           <li><a href="https://laters.com/blog">Blog</a></li>
@@ -1006,7 +1017,7 @@ a { color: inherit; }
         </ul>
       </div>
       <div class="footer-col">
-        <h3>Legal</h3>
+        <p class="footer-h">Legal</p>
         <ul>
           <li><a href="https://laters.com/terms">Terms</a></li>
           <li><a href="https://laters.com/privacy">Privacy</a></li>
@@ -1195,6 +1206,10 @@ function getOffersByProvider(key) {
 (function () {
   "use strict";
 
+  /* The production URL for this page. Schema and the canonical are built
+     from it so the preview host never leaks into either. */
+  var PAGE_URL = "https://laters.com/deals";
+
   var DAY = 86400000;
 
   var STATE = { country: null, provider: "all", sort: "value" };
@@ -1286,7 +1301,19 @@ function getOffersByProvider(key) {
     var qs = p.toString();
     window.history.replaceState(null, "", window.location.pathname + (qs ? "?" + qs : ""));
     document.getElementById("robots-meta").setAttribute("content", filtered ? "noindex, follow" : "index, follow");
-    document.getElementById("canonical-link").setAttribute("href", "https://laters.com/deals");
+    /* Finding 02. A noindexed URL whose canonical points at a different URL
+       has its canonical dropped, so the filtered view consolidated nowhere.
+       Self-canonicalise instead, still on the production origin so the
+       preview copy cannot outrank production. */
+    document.getElementById("canonical-link").setAttribute("href", PAGE_URL + (qs ? "?" + qs : ""));
+  }
+
+
+  /* Finding 04. A bare "deals/klarna/" assumed a base of /deals with no trailing
+     slash, so it 404'd from /deals/ and from the preview host. Resolve siblings
+     from whatever directory this page is actually served in instead. */
+  function basePath() {
+    return window.location.pathname.replace(/\/[^\/]*\.html?$/i, "/").replace(/\/?$/, "/");
   }
 
   function detectCountry() {
@@ -1614,7 +1641,7 @@ function getOffersByProvider(key) {
 
       var li = document.createElement("li");
       var a = el("a", "provider-card");
-      a.href = "deals/" + key + "/";
+      a.href = basePath() + key + "/";
       a.addEventListener("click", function (ev) {
         ev.preventDefault();
         STATE.provider = key;
@@ -1661,9 +1688,22 @@ function getOffersByProvider(key) {
       faqs.push({ "@type": "Question", "name": q, "acceptedAnswer": { "@type": "Answer", "text": a } });
     });
 
+    /* Finding 05. dateModified is the one date signal worth emitting on a
+       page whose whole pitch is freshness. */
+    var lastVerified = getOffers().reduce(function (m, o) {
+      return (o.lastVerifiedAt && o.lastVerifiedAt > m) ? o.lastVerifiedAt : m;
+    }, "");
+
     var graph = {
       "@context": "https://schema.org",
       "@graph": [
+        {
+          "@type": "WebPage",
+          "@id": PAGE_URL,
+          "url": PAGE_URL,
+          "name": document.title,
+          "dateModified": lastVerified || undefined
+        },
         {
           "@type": "BreadcrumbList",
           "itemListElement": [
@@ -1674,14 +1714,16 @@ function getOffersByProvider(key) {
         },
         {
           "@type": "ItemList",
-          "name": "Payment promo codes and offers",
+          "name": "Pay later flight deals",
           "numberOfItems": shown.length,
           "itemListElement": shown.map(function (o, i) {
             var offer = {
               "@type": "Offer",
               "name": o.title,
               "description": o.summary,
-              "url": "https://laters.com/deals/" + o.paymentMethodKey + "#" + o.slug,
+              /* Finding 05. The fragment has to match the DOM id the card is given,
+                 and point at the page that renders it, not a sibling. */
+              "url": PAGE_URL + "#offer-" + o.id,
               "eligibleRegion": o.countries.map(function (c) { return { "@type": "Country", "identifier": c, "name": COUNTRIES[c] || c }; }),
               "offeredBy": { "@type": "Organization", "name": PROVIDERS[o.paymentMethodKey].name }
             };
@@ -1750,7 +1792,11 @@ function getOffersByProvider(key) {
     document.querySelector('[data-stat="countries"]').textContent = Object.keys(COUNTRIES).length;
 
     /* Title is generated, not baked, so the year and the count stay current. */
-    document.title = "Payment Promo Codes and Deals " + new Date().getFullYear() + ": " + inCountryLive.length + " Live Offer" + (inCountryLive.length === 1 ? "" : "s") + " | Laters.com";
+    var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var now = new Date();
+    document.title = "Pay Later Flight Deals: " + inCountryLive.length + " Live Promo Code"
+      + (inCountryLive.length === 1 ? "" : "s") + " (" + MONTHS[now.getMonth()] + " "
+      + now.getFullYear() + ") | Laters.com";
 
     renderBest(inCountryLive);
     updateChipCounts(live);
@@ -1815,6 +1861,11 @@ function getOffersByProvider(key) {
     track("deals_filter_applied", { filterType: "reset", value: "all" });
     render();
   }
+
+  /* Finding 04: "./" resolves to the site root from /deals (no trailing
+     slash), sending the reset link to the homepage. Point it at this page's
+     own directory instead. */
+  document.querySelectorAll("[data-deals-home]").forEach(function (a) { a.href = basePath(); });
 
   readUrl();
   buildFilters();
