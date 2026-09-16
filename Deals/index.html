@@ -53,6 +53,7 @@
      the dark ink chrome, and a saturated rose that still passes contrast on
      white. Using one value for both was the old design. */
   --kq-pink: hsl(344 100% 85%);
+  --kq-brand-pink: #f0f;  /* --palette-brand-pink, the footer column heads */
   --kq-pink-on-light: hsl(344 100% 46%);
   --kq-good: #1a7f52;
   --kq-warn: #b75000;
@@ -547,16 +548,63 @@ a { color: inherit; }
 .crosslink p { margin: 12px 0 0; font-size: var(--kq-text-sm); max-width: 36rem; }
 .crosslink .btn { width: auto; border-color: var(--kq-on-ink); background: var(--kq-on-ink); color: var(--kq-ink); }
 
-/* ---------- footer ---------- */
+/* ---------- footer ----------
+   Matches the footer on laters.com/fly-now-pay-later: brand-magenta column
+   heads in the display face, 60%-white links, a social row, and a bottom bar
+   carrying the entity address and the STB licence. */
 
-.site-footer { background: var(--kq-ink); color: var(--kq-on-ink); margin-top: 64px; padding: 48px 0 40px; }
-.footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 32px; }
-.footer-col h3, .footer-col .footer-h { font-size: var(--kq-text-xs); font-family: var(--font-sans); letter-spacing: var(--kq-track-caps); font-weight: 700; margin-bottom: 12px; opacity: .72; }
-.footer-col ul { list-style: none; margin: 0; padding: 0; }
-.footer-col li + li { margin-top: 8px; }
-.footer-col a { font-size: var(--kq-text-sm); text-decoration: none; opacity: .82; }
-.footer-col a:hover { opacity: 1; text-decoration: underline; }
-.footer-legal { border-top: 1px solid var(--kq-on-ink-line); margin-top: 36px; padding-top: 20px; font-size: var(--kq-note); opacity: .72; }
+.site-footer { background: var(--kq-ink); color: var(--kq-on-ink); margin-top: 64px; padding: 56px 0 0; }
+
+.footer-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 32px; padding-bottom: 40px; }
+.footer-brand { display: flex; flex-direction: column; gap: 16px; max-width: 34rem; }
+.footer-brand img { display: block; height: 30px; width: auto; }
+.footer-blurb { margin: 0; font-size: 14px; line-height: 1.6; color: rgb(255 255 255 / .6); }
+
+/* Must be allowed to shrink, or six 44px icons overflow a 320px viewport. */
+.footer-follow { flex: 0 1 auto; min-width: 0; }
+.social-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.social {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 12px;
+  border: 1px solid rgb(255 255 255 / .15); color: rgb(255 255 255 / .8); text-decoration: none;
+  transition: background var(--kq-ease), color var(--kq-ease), border-color var(--kq-ease);
+}
+.social:hover { background: var(--kq-page); border-color: var(--kq-page); color: var(--kq-ink); }
+.social svg { width: 20px; height: 20px; }
+
+.footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 28px 20px; padding-bottom: 44px; }
+/* The live footer keeps all seven columns on one row at desktop. */
+@media (min-width: 1100px) { .footer-grid { grid-template-columns: repeat(7, 1fr); } }
+.footer-h {
+  margin: 0 0 16px; font-family: var(--font-display); font-size: 12px; font-weight: 900;
+  letter-spacing: .22em; text-transform: uppercase; color: var(--kq-brand-pink);
+}
+/* `.footer-col a` has equal specificity and comes later, so the linked column
+   heads need the extra class to keep the brand magenta. */
+.footer-col .footer-h a { color: inherit; text-decoration: none; }
+.footer-col .footer-h a:hover { text-decoration: underline; }
+.footer-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.footer-col a { font-size: 14px; text-decoration: none; color: rgb(255 255 255 / .6); }
+.footer-col a:hover { color: var(--kq-on-ink); }
+
+.footer-bottom {
+  border-top: 1px solid rgb(255 255 255 / .1);
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start;
+  gap: 20px; padding: 28px 0;
+}
+.footer-legal-text { display: flex; flex-direction: column; gap: 8px; }
+.footer-bottom p, .footer-bottom address {
+  margin: 0; font-size: 12px; line-height: 1.6; font-style: normal; color: rgb(255 255 255 / .6);
+}
+.licence {
+  display: inline-flex; align-items: center; gap: 12px; padding: 10px 16px;
+  border-radius: 12px; text-decoration: none; transition: background var(--kq-ease);
+}
+.licence:hover { background: rgb(255 255 255 / .04); }
+.lic-label { font-size: 13px; font-weight: 500; color: rgb(255 255 255 / .55); }
+.lic-no { font-size: 13px; font-weight: 600; color: rgb(255 255 255 / .85); }
+.licence svg { width: 16px; height: 16px; flex: 0 0 auto; color: rgb(255 255 255 / .35); transition: color var(--kq-ease); }
+.licence:hover svg { color: rgb(255 255 255 / .7); }
 
 /* ---------- toast / live region ---------- */
 
@@ -781,23 +829,6 @@ a { color: inherit; }
   </div>
 </div>
 
-<!-- ======================= byline ======================= -->
-<div class="byline-bar">
-  <div class="shell">
-    <p class="byline">
-      <span class="byline-who">Promo codes from the Laters.com promo sheet</span>
-      <span class="byline-when">Updated <time datetime="2026-09-15">15 September 2026</time></span>
-    </p>
-  </div>
-</div>
-
-<!-- ======================= sample data band ======================= -->
-<div class="databand">
-  <div class="shell databand-inner">
-    <span class="databand-tag">Preview</span>
-    <p>Promo codes on this build come from the Laters.com promo code sheet and match the codes on each laters.com payment page as of 10 Sep 2026. No end dates or caps are published for them yet, so every card reads "No end date listed".</p>
-  </div>
-</div>
 
 <!-- ======================= hero controls: stats + country ======================= -->
 <div class="hero-controls">
@@ -928,7 +959,7 @@ a { color: inherit; }
           <h2>How does pay later actually work?</h2>
           <p>This page covers what is on offer today. For how each method splits a fare, what it costs, and who can be approved, read the payment method guides.</p>
         </div>
-        <a class="btn" href="https://laters.com/payment">
+        <a class="btn" href="https://laters.com/fly-now-pay-later">
           All payment methods
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </a>
@@ -990,42 +1021,113 @@ a { color: inherit; }
 <footer class="site-footer on-ink">
   <div class="shell">
     <h2 class="sr-only">Site links</h2>
+
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="media/laters-logo.svg" alt="Laters.com" width="150" height="36">
+        <p class="footer-blurb">Book flights across 650+ airlines and pay later, your way. Split the cost, pay in 4, or spread larger fares, with 40+ providers in a single checkout.</p>
+      </div>
+      <div class="footer-follow">
+        <h3 class="footer-h">Follow</h3>
+        <div class="social-row">
+          <a class="social" href="https://www.facebook.com/latershq" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.2h2.4l.36-2.8H13.5V9.2c0-.8.22-1.36 1.38-1.36h1.47V5.34A19.6 19.6 0 0 0 14.2 5.2c-2.13 0-3.6 1.3-3.6 3.69V11H8.2v2.8h2.4V21h2.9z"/></svg></a>
+          <a class="social" href="https://www.instagram.com/laters.hq/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.2" cy="6.8" r="1.05" fill="currentColor" stroke="none"/></svg></a>
+          <a class="social" href="https://www.tiktok.com/@laters.hq" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.1v12.4a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 0 1-2.59-2.59 2.59 2.59 0 0 1 3.37-2.47V9.66a5.66 5.66 0 0 0-.78-.05A5.7 5.7 0 0 0 4.15 15.3a5.7 5.7 0 0 0 5.7 5.7 5.7 5.7 0 0 0 5.7-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3a4.28 4.28 0 0 1-3.25-1.48z"/></svg></a>
+          <a class="social" href="https://x.com/latershq" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.53 3h3.02l-6.6 7.54L21.75 21h-5.9l-4.62-6.04L5.95 21H2.92l7.06-8.07L2.25 3h6.05l4.18 5.52L17.53 3zm-1.06 16.2h1.67L7.6 4.7H5.8l10.67 14.5z"/></svg></a>
+          <a class="social" href="https://www.youtube.com/@latershq" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg></a>
+          <a class="social" href="https://www.linkedin.com/company/laters" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2 2 0 1 1 0 4.001 2 2 0 0 1 0-4.001zM3.2 9h3.4v12H3.2V9zm5.4 0h3.26v1.64h.05c.45-.86 1.56-1.77 3.2-1.77 3.43 0 4.06 2.26 4.06 5.2V21h-3.4v-5.27c0-1.26-.02-2.87-1.75-2.87-1.75 0-2.02 1.37-2.02 2.78V21H8.6V9z"/></svg></a>
+        </div>
+      </div>
+    </div>
+
     <div class="footer-grid">
       <div class="footer-col">
-        <p class="footer-h">Pay later</p>
+        <h3 class="footer-h"><a href="https://laters.com/ways-to-pay">Pay in full</a></h3>
+        <ul>
+          <li><a href="https://laters.com/payment/crypto">Pay with crypto</a></li>
+          <li><a href="https://laters.com/ways-to-pay">All ways to pay</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-h"><a href="https://laters.com/fly-now-pay-later">Fly now pay later</a></h3>
         <ul>
           <li><a href="https://laters.com/payment/klarna">Klarna</a></li>
+          <li><a href="https://laters.com/payment/splitit">Splitit</a></li>
           <li><a href="https://laters.com/payment/afterpay">Afterpay</a></li>
+          <li><a href="https://laters.com/payment/tamara">Tamara</a></li>
+          <li><a href="https://laters.com/payment/paypal">PayPal</a></li>
+          <li><a href="https://laters.com/payment/grab">Grab PayLater</a></li>
+          <li><a href="https://laters.com/payment/clearpay">Clearpay</a></li>
+          <li><a href="https://laters.com/payment/affirm">Affirm</a></li>
+          <li><a href="https://laters.com/payment/tabby">Tabby</a></li>
+          <li><a href="https://laters.com/payment/zip">Zip</a></li>
           <li><a href="https://laters.com/payment/atome">Atome</a></li>
-          <li><a href="https://laters.com/payment">All 40+ providers</a></li>
+          <li><a href="https://laters.com/fly-now-pay-later">All fly now pay later providers</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <p class="footer-h">Deals</p>
+        <h3 class="footer-h"><a href="https://laters.com/airlines">Airlines</a></h3>
         <ul>
-          <li><a href="./" data-deals-home>All live offers</a></li>
-          <li><a href="#providers-heading">Browse by provider</a></li>
-          <li><a href="#faq-heading">How codes work</a></li>
+          <li><a href="https://laters.com/airline/american-airlines">American Airlines</a></li>
+          <li><a href="https://laters.com/airline/frontier-airlines">Frontier Airlines</a></li>
+          <li><a href="https://laters.com/airline/singapore-airlines">Singapore Airlines</a></li>
+          <li><a href="https://laters.com/airline/delta">Delta Airlines</a></li>
+          <li><a href="https://laters.com/airline/scoot">Scoot</a></li>
+          <li><a href="https://laters.com/airlines">All Airlines</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <p class="footer-h">Company</p>
+        <h3 class="footer-h"><a href="https://laters.com/destinations">Destinations</a></h3>
+        <ul>
+          <li><a href="https://laters.com/destination/bali">Bali</a></li>
+          <li><a href="https://laters.com/destination/tokyo">Tokyo</a></li>
+          <li><a href="https://laters.com/destination/maldives">Maldives</a></li>
+          <li><a href="https://laters.com/destination/dubai">Dubai</a></li>
+          <li><a href="https://laters.com/destination/santorini">Santorini</a></li>
+          <li><a href="https://laters.com/destinations">All destinations</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-h"><a href="https://laters.com/about">Company</a></h3>
         <ul>
           <li><a href="https://laters.com/about">About us</a></li>
+          <li><a href="https://laters.com/is-fly-fairly-legit">Is Laters.com legit?</a></li>
+          <li><a href="https://laters.com/news">Press</a></li>
           <li><a href="https://laters.com/blog">Blog</a></li>
-          <li><a href="https://laters.com/contact">Contact us</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <p class="footer-h">Legal</p>
+        <h3 class="footer-h">Support</h3>
         <ul>
-          <li><a href="https://laters.com/terms">Terms</a></li>
-          <li><a href="https://laters.com/privacy">Privacy</a></li>
+          <li><a href="https://laters.com/contact">Contact us</a></li>
+          <li><a href="https://laters.com/#how-it-works">How it works</a></li>
+          <li><a href="https://laters.com/faq">FAQ</a></li>
+          <li><a href="https://laters.com/bookings">Manage booking</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-h">Legal</h3>
+        <ul>
+          <li><a href="https://laters.com/terms-of-service">Terms</a></li>
+          <li><a href="https://laters.com/privacy-policy">Privacy</a></li>
+          <li><a href="https://laters.com/marketing-communications-terms">Marketing terms</a></li>
           <li><a href="https://laters.com/cookies">Cookies</a></li>
         </ul>
       </div>
     </div>
-    <p class="footer-legal">&copy; 2026 Laters.com. Formerly Fly Fairly. All rights reserved. Singapore Travel Agent Licence TA04059.</p>
+
+    <div class="footer-bottom">
+      <div class="footer-legal-text">
+        <p>&copy; 2026 Laters.com. Formerly Fly Fairly. All rights reserved.</p>
+        <address>Fly Fairly Pte. Ltd., 105 Cecil Street, #18-18, The Octagon, Singapore 069534</address>
+      </div>
+      <a class="licence" href="https://trust.stb.gov.sg/s/businesslicence/0cEOQ0000000Hbx2AE/fly-fairly-pte-ltd"
+         target="_blank" rel="noopener noreferrer"
+         aria-label="Verify our Singapore Tourism Board travel agent licence TA04059">
+        <span><span class="lic-label">Singapore Travel Agent Licence</span> <span class="lic-no">TA04059</span></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
+    </div>
   </div>
 </footer>
 
@@ -1351,6 +1453,9 @@ function getOffersByProvider(key) {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + '</svg>';
   }
   var ICON_ARROW = icon('<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>');
+  /* The primary CTA scrolls up to the search widget rather than navigating,
+     so it points the way it actually moves. */
+  var ICON_ARROW_UP = icon('<path d="M12 19V5"/><path d="m5 12 7-7 7 7"/>');
 
   /* ---------- offer card ---------- */
 
@@ -1454,11 +1559,11 @@ function getOffersByProvider(key) {
     } else {
       var primary = el("button", "btn");
       primary.type = "button";
-      primary.innerHTML = "<span>" + (offer.code ? "Copy code and search flights" : "Search flights with this offer") + "</span>" + ICON_ARROW;
+      primary.innerHTML = "<span>" + (offer.code ? "Copy code and search flights" : "Search flights with this offer") + "</span>" + ICON_ARROW_UP;
       primary.addEventListener("click", function () {
-        if (offer.code) { doCopy(offer, null, li); }
-        window.open(offer.destinationUrl, "_blank", "noopener");
-        track("offer_cta_clicked", { offerId: offer.id, provider: offer.paymentMethodKey, destination: offer.destinationUrl });
+        if (offer.code) { doCopy(offer, null, li, scrollToSearch); }
+        else { scrollToSearch(); }
+        track("offer_cta_clicked", { offerId: offer.id, provider: offer.paymentMethodKey, destination: "hero_search" });
       });
       cta.appendChild(primary);
     }
@@ -1467,9 +1572,19 @@ function getOffersByProvider(key) {
     return li;
   }
 
+  /* Take the visitor back to the search widget with the code on their
+     clipboard, instead of opening a new tab. */
+  function scrollToSearch() {
+    var widget = document.querySelector(".flight-widget");
+    if (!widget) { return; }
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    widget.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+    try { widget.focus({ preventScroll: true }); } catch (e) { widget.focus(); }
+  }
+
   /* ---------- copy, with a fallback that never fails silently ---------- */
 
-  function doCopy(offer, button, card) {
+  function doCopy(offer, button, card, after) {
     var code = offer.code;
     if (!code) { return; }
 
@@ -1481,6 +1596,7 @@ function getOffersByProvider(key) {
       }
       announce("Code " + code + " copied to your clipboard.");
       showToast("Code copied");
+      if (after) { after(); }
       track("offer_code_copied", { offerId: offer.id, provider: offer.paymentMethodKey });
     }
 
@@ -1495,6 +1611,8 @@ function getOffersByProvider(key) {
       card.querySelector(".code-row").insertAdjacentElement("afterend", input);
       input.focus();
       input.select();
+      /* No `after` here on purpose: the visitor still has to copy from the
+         field we just focused, so we must not scroll them away from it. */
       announce("Automatic copy is unavailable. The code is selected in a text field, copy it with your keyboard.");
       showToast("Copy the selected code");
       track("offer_code_copied", { offerId: offer.id, provider: offer.paymentMethodKey });
