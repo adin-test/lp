@@ -364,6 +364,7 @@ a { color: inherit; }
 .vs tbody th { font-weight: 600; }
 .vs .vs-value { font-family: var(--font-display); font-size: 20px; font-weight: 900; text-transform: uppercase; letter-spacing: var(--kq-track-display); white-space: nowrap; }
 .vs .vs-code { font: 700 13px var(--font-mono); }
+.vs .vs-saving { display: block; margin-top: 3px; font: 600 var(--kq-note) var(--font-sans); letter-spacing: 0; text-transform: none; color: var(--kq-good); }
 
 /* ---------- provider mark ---------- */
 
@@ -671,6 +672,51 @@ a { color: inherit; }
   border-bottom: 1px solid var(--kq-card-line); padding-bottom: 12px; margin: 0 0 16px;
 }
 
+/* ---------- fare input ----------
+   The page's one real question. Everything below re-ranks against it. */
+.fare { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 22px; }
+.fare > label { font-size: var(--kq-text-xs); letter-spacing: var(--kq-track-caps); text-transform: uppercase; font-weight: 700; }
+.fare-field {
+  display: inline-flex; align-items: center; gap: 8px; background: var(--kq-page);
+  border: 1.5px solid var(--kq-ink); border-radius: var(--kq-radius-pill); padding: 5px 16px; min-height: 40px;
+}
+.fare-field:focus-within { outline: 2px solid var(--kq-ink); outline-offset: 2px; }
+.fare-cur { font: 700 12px var(--font-mono); color: #4b4b4b; }
+.fare input { width: 7ch; border: 0; background: transparent; font: 700 15px var(--font-sans); color: var(--kq-ink); }
+.fare input:focus { outline: 0; }
+.fare input::-webkit-outer-spin-button, .fare input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.fare input[type=number] { -moz-appearance: textfield; }
+.fare-hint { flex: 1 1 100%; margin: 0; font-size: var(--kq-note); line-height: 1.5; color: #4b4b4b; }
+
+/* ---------- what an offer is worth on that fare ---------- */
+.offer-saving { margin: 0; font-size: var(--kq-text-sm); font-weight: 700; color: var(--kq-good); }
+
+/* ---------- spend tiers ----------
+   One promotion, several thresholds. Selecting a tier repoints the card's
+   headline, its minimum and its CTA at that code. */
+.tiers { margin: 0; padding: 4px; border: 1px solid var(--kq-line); border-radius: var(--kq-radius-sm); display: flex; flex-direction: column; gap: 2px; }
+.tier {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 2px 10px;
+  padding: 9px 10px; border-radius: 8px; cursor: pointer; font-size: var(--kq-text-sm);
+}
+.tier:hover { background: var(--kq-line-soft); }
+.tier input { margin: 0; accent-color: var(--kq-ink); }
+.tier-spend { color: #4b4b4b; }
+.tier-value { font-weight: 700; text-align: right; }
+.tier-code { grid-column: 2 / -1; font: 700 12px var(--font-mono); letter-spacing: .04em; }
+.tier.is-active { background: var(--kq-line-soft); }
+.tier.is-out { opacity: .5; }
+
+/* ---------- clipped table gets a right-edge fade ---------- */
+.vs-scroll.is-clipped {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 38px), transparent 100%);
+  mask-image: linear-gradient(to right, #000 calc(100% - 38px), transparent 100%);
+}
+
+/* ---------- hero proof ---------- */
+.hero-proof { margin: 0; font-size: var(--kq-text-sm); font-weight: 700; color: var(--kq-on-ink); }
+.hero-proof .sep { opacity: .5; margin: 0 8px; }
+
 /* ---------- responsive ---------- */
 
 @media (max-width: 768px) {
@@ -765,6 +811,7 @@ a { color: inherit; }
     <div class="hero-center">
       <h1>Pay later flight <span class="accent">deals</span></h1>
       <p class="hero-sub">Search and compare fares on Laters.com, then copy a live promo code from your pay later provider and apply it at checkout.</p>
+      <p class="hero-proof" data-proof></p>
     </div>
 
     <div class="hero-panel-wrap">
@@ -877,6 +924,16 @@ a { color: inherit; }
             </select>
           </div>
         </div>
+      </div>
+
+      <div class="fare">
+        <label for="fare-input">Your fare</label>
+        <span class="fare-field">
+          <span class="fare-cur" data-fare-cur></span>
+          <input id="fare-input" type="number" min="0" step="10" inputmode="numeric" placeholder="e.g. 680" data-fare>
+        </span>
+        <button type="button" class="btn-reset" data-fare-clear hidden>Clear</button>
+        <p class="fare-hint" data-fare-hint></p>
       </div>
 
       <p class="result-line">
@@ -1121,6 +1178,15 @@ var PROVIDERS = {
   "crypto":            { name: "Crypto",         initials: "CR", paymentPage: "https://laters.com/payment/crypto" }
 };
 
+/* The currency each market's fares are quoted in. Needed because a percent
+   code carries no currency of its own: on a provider page where every code is
+   a percentage, there is nothing in the offer data to label the fare box with. */
+var COUNTRY_CURRENCY = {
+  "US": "USD", "GB": "GBP", "CA": "CAD", "AU": "AUD", "NZ": "NZD",
+  "DE": "EUR", "SE": "SEK", "SG": "SGD", "MY": "MYR", "ID": "IDR",
+  "AE": "AED", "SA": "SAR"
+};
+
 var COUNTRIES = {
   "US": "United States",
   "GB": "United Kingdom",
@@ -1346,6 +1412,7 @@ function getOffersByProvider(key) {
 
   var PARAM_KEYS = ["country", "provider", "sort"];
   var BOOT_COUNTRY = null;
+  STATE.fare = null;
 
   function readUrl() {
     BOOT_COUNTRY = detectCountry();
@@ -1387,6 +1454,61 @@ function getOffersByProvider(key) {
   }
   function persistCountry(code) { try { window.sessionStorage.setItem("laters.deals.country", code); } catch (e) {} }
 
+
+  /* ---------- fare ----------
+     Kept out of the URL on purpose: it is a personal figure, and every
+     value would otherwise mint another noindex variant of the page. */
+  function readFare() {
+    try { var v = parseFloat(window.sessionStorage.getItem("laters.deals.fare")); return (isFinite(v) && v > 0) ? v : null; }
+    catch (e) { return null; }
+  }
+  function persistFare(v) {
+    try {
+      if (v) { window.sessionStorage.setItem("laters.deals.fare", String(v)); }
+      else { window.sessionStorage.removeItem("laters.deals.fare"); }
+    } catch (e) {}
+  }
+
+  /* The currency the visible offers are actually priced in, so the input is
+     not silently comparing a fare to a threshold in another currency. */
+  function fareCurrency(pool) {
+    var tally = {}, best = null;
+    pool.forEach(function (o) { if (o.currency) { tally[o.currency] = (tally[o.currency] || 0) + 1; } });
+    Object.keys(tally).forEach(function (c) { if (!best || tally[c] > tally[best]) { best = c; } });
+    return best || COUNTRY_CURRENCY[STATE.country] || null;
+  }
+
+  function bindFare() {
+    var input = document.querySelector("[data-fare]");
+    var clear = document.querySelector("[data-fare-clear]");
+    if (!input) { return; }
+    if (STATE.fare) { input.value = String(STATE.fare); }
+    input.addEventListener("input", function () {
+      var v = parseFloat(input.value);
+      STATE.fare = (isFinite(v) && v > 0) ? v : null;
+      persistFare(STATE.fare);
+      track("deals_fare_entered", { fare: STATE.fare });
+      render();
+    });
+    clear.addEventListener("click", function () {
+      input.value = "";
+      STATE.fare = null;
+      persistFare(null);
+      render();
+      input.focus();
+    });
+  }
+
+  /* A table wider than its box gets a right-edge fade, so it reads as
+     scrollable rather than as a column that has been cut off. */
+  function paintTableFade() {
+    var box = document.querySelector(".vs-scroll");
+    if (!box) { return; }
+    var clipped = box.scrollWidth > box.clientWidth + 1;
+    var atEnd = box.scrollLeft + box.clientWidth >= box.scrollWidth - 1;
+    box.classList.toggle("is-clipped", clipped && !atEnd);
+  }
+
   /* ---------- filtering ---------- */
 
   function matchesFilters(o) { return STATE.provider === "all" || o.paymentMethodKey === STATE.provider; }
@@ -1422,30 +1544,116 @@ function getOffersByProvider(key) {
 
   /* ---------- offer card ---------- */
 
-  function buildCard(offer) {
-    var provider = PROVIDERS[offer.paymentMethodKey];
-    var expired = isExpired(offer);
-    var expiry = expiryInfo(offer);
-    var value = headlineValue(offer);
+  function money(cur, n) { return (cur ? cur + " " : "") + n; }
+  /* A percent offer has no currency of its own: what it saves is
+     denominated in the fare, so fall back to the fare's currency. */
+  function savingMoney(offer, n) { return money(offer.currency || STATE.fareCur, n); }
+
+  /* A spend ladder is one promotion published as several codes that differ
+     only by threshold. Same provider, same type, same currency, same
+     markets, and every member carrying a distinct minimum. Klarna's two
+     codes are different promotions, so they are not grouped. */
+  function ladderKey(o) {
+    return [o.paymentMethodKey, o.discountType, o.currency || "", o.countries.join(",")].join("|");
+  }
+
+  function groupOffers(list) {
+    var order = [], byKey = {};
+    list.forEach(function (o) {
+      var k = ladderKey(o);
+      if (!byKey[k]) { byKey[k] = []; order.push(k); }
+      byKey[k].push(o);
+    });
+    var groups = [];
+    order.forEach(function (k) {
+      var members = byKey[k];
+      var spends = {}, distinct = true;
+      members.forEach(function (m) {
+        if (!m.minSpend || spends[m.minSpend]) { distinct = false; }
+        spends[m.minSpend] = true;
+      });
+      if (members.length > 1 && distinct) {
+        groups.push({ key: k, tiers: members.slice().sort(function (a, b) { return a.minSpend - b.minSpend; }) });
+      } else {
+        members.forEach(function (m) { groups.push({ key: k + "|" + m.id, tiers: [m] }); });
+      }
+    });
+    return groups;
+  }
+
+  /* What the offer is actually worth on a given fare. Null where the fare
+     does not reach the threshold, or where the benefit is not an amount. */
+  function savingOn(offer, fare) {
+    if (!fare) { return null; }
+    if (offer.minSpend && fare < offer.minSpend) { return null; }
+    var raw;
+    switch (offer.discountType) {
+      case "percent":
+      case "cashback": raw = fare * offer.value / 100; break;
+      case "fixed":
+      case "bundled":  raw = offer.value; break;
+      default: return null;
+    }
+    if (offer.maxDiscount) { raw = Math.min(raw, offer.maxDiscount); }
+    return raw;
+  }
+
+  /* With a fare, the best tier that fare actually reaches. Without one, the
+     lowest barrier, because that is the tier most visitors qualify for. */
+  function pickTier(group, fare) {
+    var tiers = group.tiers, best = null;
+    if (fare) {
+      tiers.forEach(function (t) {
+        var s = savingOn(t, fare);
+        if (s !== null && (best === null || s > savingOn(best, fare))) { best = t; }
+      });
+      if (best) { return best; }
+    }
+    return tiers.slice().sort(function (a, b) { return (a.minSpend || 0) - (b.minSpend || 0); })[0];
+  }
+
+  function sortGroups(groups) {
+    var copy = groups.slice(), fare = STATE.fare;
+    if (fare) {
+      copy.sort(function (a, b) {
+        var sa = savingOn(pickTier(a, fare), fare), sb = savingOn(pickTier(b, fare), fare);
+        if (sa === null && sb === null) { return 0; }
+        if (sa === null) { return 1; }
+        if (sb === null) { return -1; }
+        return sb - sa;
+      });
+      return copy;
+    }
+    if (STATE.sort === "minspend") {
+      copy.sort(function (a, b) { return (pickTier(a, null).minSpend || 0) - (pickTier(b, null).minSpend || 0); });
+      return copy;
+    }
+    copy.sort(function (a, b) { return valueScore(pickTier(b, null)) - valueScore(pickTier(a, null)); });
+    return copy;
+  }
+
+  function ladderTitle(tiers, provider) {
+    var vals = tiers.map(function (t) { return t.value; });
+    return money(tiers[0].currency, Math.min.apply(null, vals)) + " to " + Math.max.apply(null, vals)
+      + " off flights with " + provider.name;
+  }
+
+  function buildCard(group) {
+    var tiers = group.tiers;
+    var isLadder = tiers.length > 1;
+    var active = pickTier(group, STATE.fare);
+    var provider = PROVIDERS[tiers[0].paymentMethodKey];
+    var primary = null;
 
     var li = el("li", "offer");
-    li.dataset.offerId = offer.id;
-    if (expired) { li.classList.add("offer--expired"); }
 
-    /* 1. headline value */
     var h3 = el("h3", "offer-value");
-    h3.appendChild(document.createTextNode(value.main));
-    if (value.unit) { h3.appendChild(el("span", "unit", value.unit)); }
+    var saving = el("p", "offer-saving");
+    var spend = el("p", "offer-spend");
     li.appendChild(h3);
+    li.appendChild(saving);
+    li.appendChild(spend);
 
-    if (offer.minSpend) {
-      var spend = el("p", "offer-spend");
-      spend.appendChild(el("span", "lbl", "Min spend "));
-      spend.appendChild(document.createTextNode((offer.currency ? offer.currency + " " : "") + offer.minSpend));
-      li.appendChild(spend);
-    }
-
-    /* 2. provider logo and name */
     var prov = el("p", "offer-provider");
     var mark = el("span", "mark mark--sm", provider.initials);
     mark.setAttribute("aria-hidden", "true");
@@ -1454,93 +1662,129 @@ function getOffersByProvider(key) {
     var provLink = el("a", null, provider.name);
     provLink.href = provider.paymentPage;
     provText.appendChild(provLink);
-    provText.appendChild(el("span", "provider-meta", TYPE_LABEL[offer.discountType]));
+    provText.appendChild(el("span", "provider-meta", TYPE_LABEL[tiers[0].discountType]));
     prov.appendChild(provText);
     li.appendChild(prov);
 
-    /* 3. title and summary */
-    li.appendChild(el("p", "offer-title", offer.title));
-    li.appendChild(el("p", "offer-summary", offer.summary));
+    li.appendChild(el("p", "offer-title", isLadder ? ladderTitle(tiers, provider) : tiers[0].title));
+    li.appendChild(el("p", "offer-summary", tiers[0].summary));
 
-    /* 4. code */
-    var codeRow = el("div", "code-row");
-    if (offer.code) {
-      codeRow.appendChild(el("span", "code", offer.code));
-      if (!expired) {
+    /* One promotion, one copy affordance. A ladder offers its codes as
+       tiers and the CTA copies whichever is selected; a single offer keeps
+       the copy button on the code row. */
+    var rows = [];
+    if (isLadder) {
+      var fs = el("fieldset", "tiers");
+      fs.appendChild(el("legend", "sr-only", "Choose a spend tier"));
+      tiers.forEach(function (t) {
+        var lab = el("label", "tier");
+        var r = document.createElement("input");
+        r.type = "radio";
+        r.name = "tier-" + group.key;
+        r.value = t.id;
+        r.addEventListener("change", function () { active = t; paint(); });
+        var v = headlineValue(t);
+        lab.appendChild(r);
+        lab.appendChild(el("span", "tier-spend", "Spend " + money(t.currency, t.minSpend) + " or more"));
+        lab.appendChild(el("span", "tier-value", v.main + v.unit));
+        lab.appendChild(el("span", "tier-code", t.code));
+        fs.appendChild(lab);
+        rows.push({ input: r, tier: t, label: lab });
+      });
+      li.appendChild(fs);
+    } else {
+      var codeRow = el("div", "code-row");
+      if (tiers[0].code) {
+        codeRow.appendChild(el("span", "code", tiers[0].code));
         var copyBtn = el("button", "code-copy");
         copyBtn.type = "button";
         copyBtn.textContent = "Tap to copy";
-        copyBtn.setAttribute("aria-label", "Copy code " + offer.code);
-        copyBtn.addEventListener("click", function () { doCopy(offer, copyBtn, li); });
+        copyBtn.setAttribute("aria-label", "Copy code " + tiers[0].code);
+        copyBtn.addEventListener("click", function () { doCopy(active, copyBtn, li); });
         codeRow.appendChild(copyBtn);
+      } else {
+        codeRow.appendChild(el("span", "code code--auto", "Applies automatically"));
       }
-    } else {
-      codeRow.appendChild(el("span", "code code--auto", "Applies automatically"));
+      li.appendChild(codeRow);
     }
-    li.appendChild(codeRow);
 
-    /* 5. conditions row: min spend, new-users-only */
     var conds = el("ul", "conds");
-    if (offer.maxDiscount && offer.discountType !== "fixed") { conds.appendChild(el("li", null, "Capped at " + (offer.currency ? offer.currency + " " : "") + offer.maxDiscount)); }
-    if (offer.newUsersOnly) { conds.appendChild(el("li", null, "New customers only")); }
-    if (offer.firstTransactionOnly) { conds.appendChild(el("li", null, "First booking only")); }
+    if (tiers[0].maxDiscount && tiers[0].discountType !== "fixed") { conds.appendChild(el("li", null, "Capped at " + money(tiers[0].currency, tiers[0].maxDiscount))); }
+    if (tiers[0].newUsersOnly) { conds.appendChild(el("li", null, "New customers only")); }
+    if (tiers[0].firstTransactionOnly) { conds.appendChild(el("li", null, "First booking only")); }
     if (conds.children.length) { li.appendChild(conds); }
 
-    /* 6. expiry and eligibility, folded into the terms disclosure below.
-       Nothing in the sheet carries an end date, so on the card face this
-       was eleven repetitions of "No end date listed". When real end dates
-       land, promote the countdown back onto the card. */
+    /* Expiry and eligibility live in the fold: nothing in the sheet carries
+       an end date. When real end dates land, promote the countdown out. */
+    var terms = el("details", "terms");
+    terms.appendChild(el("summary", null, "Full terms and how to redeem"));
+    var termsOl = el("ol");
+    terms.appendChild(termsOl);
+
     var meta = el("div", "offer-meta");
+    var expiry = expiryInfo(tiers[0]);
     var expRow = el("div", "row");
-    if (expiry.soon) {
-      expRow.appendChild(el("span", "ends-soon", expiry.text));
-      expRow.appendChild(el("span", "sr-only", " Exact end date: " + fmtDate(offer.endsAt, offer.timezone) + "."));
-    } else if (expiry.iso) {
-      var t = el("time", null, expiry.text);
-      t.setAttribute("datetime", expiry.iso);
-      expRow.appendChild(t);
+    if (expiry.iso) {
+      var t0 = el("time", null, expiry.text);
+      t0.setAttribute("datetime", expiry.iso);
+      expRow.appendChild(t0);
     } else {
       expRow.appendChild(el("span", null, expiry.text));
     }
     meta.appendChild(expRow);
-
     var ctyRow = el("div", "row");
-    ctyRow.appendChild(el("span", null, "Available in " + offer.countries.join(", ")));
+    ctyRow.appendChild(el("span", null, "Available in " + tiers[0].countries.join(", ")));
     meta.appendChild(ctyRow);
-
-    /* 7. terms, collapsed */
-    var terms = el("details", "terms");
-    var sum = el("summary", null, "Full terms and how to redeem");
-    terms.appendChild(sum);
-    var ol = el("ol");
-    offer.redemptionSteps.forEach(function (step) { ol.appendChild(el("li", null, step)); });
-    terms.appendChild(ol);
     terms.appendChild(meta);
     terms.appendChild(el("p", "terms-fine", "Offer terms can change without notice."));
-    terms.addEventListener("toggle", function () { if (terms.open) { track("offer_terms_opened", { offerId: offer.id }); } });
+    terms.addEventListener("toggle", function () { if (terms.open) { track("offer_terms_opened", { offerId: active.id }); } });
     li.appendChild(terms);
 
-    /* 8. cta, single path, no branching */
     var cta = el("div", "offer-cta");
-    if (expired) {
-      var dead = el("button", "btn");
-      dead.type = "button";
-      dead.disabled = true;
-      dead.textContent = "Offer has ended";
-      cta.appendChild(dead);
-    } else {
-      var primary = el("button", "btn");
-      primary.type = "button";
-      primary.innerHTML = "<span>" + (offer.code ? "Copy code and search flights" : "Search flights with this offer") + "</span>" + ICON_ARROW_UP;
-      primary.addEventListener("click", function () {
-        if (offer.code) { doCopy(offer, null, li, scrollToSearch); }
-        else { scrollToSearch(); }
-        track("offer_cta_clicked", { offerId: offer.id, provider: offer.paymentMethodKey, destination: "hero_search" });
-      });
-      cta.appendChild(primary);
-    }
+    primary = el("button", "btn");
+    primary.type = "button";
+    primary.innerHTML = "<span>" + (tiers[0].code ? "Search flights with this code" : "Search flights with this offer") + "</span>" + ICON_ARROW_UP;
+    primary.addEventListener("click", function () {
+      if (active.code) { doCopy(active, null, li, scrollToSearch); }
+      else { scrollToSearch(); }
+      track("offer_cta_clicked", { offerId: active.id, provider: active.paymentMethodKey, destination: "hero_search" });
+    });
+    cta.appendChild(primary);
     li.appendChild(cta);
 
+    function paint() {
+      li.dataset.offerId = active.id;
+
+      var v = headlineValue(active);
+      h3.textContent = "";
+      h3.appendChild(document.createTextNode(v.main));
+      if (v.unit) { h3.appendChild(el("span", "unit", v.unit)); }
+
+      var s = savingOn(active, STATE.fare);
+      saving.hidden = (s === null);
+      saving.textContent = s === null ? "" : "Saves about " + savingMoney(active, Math.round(s)) + " on your fare";
+
+      spend.hidden = !active.minSpend;
+      spend.textContent = "";
+      if (active.minSpend) {
+        spend.appendChild(el("span", "lbl", "Min spend "));
+        spend.appendChild(document.createTextNode(money(active.currency, active.minSpend)));
+      }
+
+      rows.forEach(function (r) {
+        var reach = !STATE.fare || !r.tier.minSpend || STATE.fare >= r.tier.minSpend;
+        r.label.classList.toggle("is-active", r.tier === active);
+        r.label.classList.toggle("is-out", !reach);
+        r.input.checked = (r.tier === active);
+      });
+
+      termsOl.innerHTML = "";
+      active.redemptionSteps.forEach(function (step) { termsOl.appendChild(el("li", null, step)); });
+
+      if (primary && active.code) { primary.setAttribute("aria-label", "Copy " + active.code + " and search flights"); }
+    }
+
+    paint();
     return li;
   }
 
@@ -1663,13 +1907,16 @@ function getOffersByProvider(key) {
     var body = document.querySelector("[data-best-body]");
     body.innerHTML = "";
 
-    var byProvider = {};
-    pool.forEach(function (o) {
-      var k = o.paymentMethodKey;
-      if (!byProvider[k] || valueScore(o) > valueScore(byProvider[k])) { byProvider[k] = o; }
+    /* Groups arrive already ranked, so the first group a provider appears in
+       is that provider's best, and the tier shown is the one the fare
+       reaches, or the lowest barrier when no fare is set. */
+    var seen = {}, rows = [];
+    sortGroups(groupOffers(pool)).forEach(function (g) {
+      var t = pickTier(g, STATE.fare);
+      if (seen[t.paymentMethodKey]) { return; }
+      seen[t.paymentMethodKey] = true;
+      rows.push(t);
     });
-    var rows = Object.keys(byProvider).map(function (k) { return byProvider[k]; });
-    rows.sort(function (a, b) { return valueScore(b) - valueScore(a); });
 
     rows.forEach(function (o) {
       var provider = PROVIDERS[o.paymentMethodKey];
@@ -1700,6 +1947,8 @@ function getOffersByProvider(key) {
 
       var tdV = document.createElement("td");
       tdV.appendChild(el("span", "vs-value", value.main + value.unit));
+      var s = savingOn(o, STATE.fare);
+      if (s !== null) { tdV.appendChild(el("span", "vs-saving", "saves about " + savingMoney(o, Math.round(s)))); }
       tr.appendChild(tdV);
 
       var tdC = document.createElement("td");
@@ -1708,7 +1957,7 @@ function getOffersByProvider(key) {
       tr.appendChild(tdC);
 
       var tdS = document.createElement("td");
-      tdS.textContent = o.minSpend ? (o.currency ? o.currency + " " : "") + o.minSpend : "No minimum";
+      tdS.textContent = o.minSpend ? money(o.currency, o.minSpend) : "No minimum";
       tr.appendChild(tdS);
 
       body.appendChild(tr);
@@ -1716,7 +1965,9 @@ function getOffersByProvider(key) {
 
     var note = document.querySelector("[data-best-note]");
     note.textContent = rows.length
-      ? "Showing " + rows.length + " provider" + (rows.length === 1 ? "" : "s") + " with a live offer in " + COUNTRIES[STATE.country] + "."
+      ? (STATE.fare
+          ? "Ranked by what each provider's best reachable code saves on a " + money(STATE.fareCur, STATE.fare) + " fare."
+          : "Showing each provider's lowest-threshold code, the one most bookings qualify for. Enter your fare above to rank by actual saving.")
       : "No provider currently has a live offer in " + COUNTRIES[STATE.country] + ". The provider list below still shows standing benefits on each provider page.";
   }
 
@@ -1886,6 +2137,22 @@ function getOffersByProvider(key) {
       + (inCountryLive.length === 1 ? "" : "s") + " (" + MONTHS[now.getMonth()] + " "
       + now.getFullYear() + ") | Laters.com";
 
+    var lastVerified = getOffers().reduce(function (m, o) {
+      return (o.lastVerifiedAt && o.lastVerifiedAt > m) ? o.lastVerifiedAt : m;
+    }, "");
+    var providerCount = Object.keys(inCountryLive.reduce(function (a, o) { a[o.paymentMethodKey] = 1; return a; }, {})).length;
+    document.querySelector("[data-proof]").textContent =
+      inCountryLive.length + " live code" + (inCountryLive.length === 1 ? "" : "s") + " across "
+      + providerCount + " provider" + (providerCount === 1 ? "" : "s")
+      + (lastVerified ? ", checked " + fmtDate(lastVerified) : "");
+
+    STATE.fareCur = fareCurrency(inCountryLive);
+    document.querySelector("[data-fare-cur]").textContent = STATE.fareCur || "";
+    document.querySelector("[data-fare-clear]").hidden = !STATE.fare;
+    document.querySelector("[data-fare-hint]").textContent = STATE.fare
+      ? "Codes are ranked by what they save on this fare. Tiers your fare does not reach are dimmed."
+      : "Enter roughly what your fare costs and these codes re-rank by what each one actually saves you.";
+
     renderBest(inCountryLive);
     updateChipCounts(live);
     document.querySelector("[data-sort]").value = STATE.sort;
@@ -1893,9 +2160,10 @@ function getOffersByProvider(key) {
 
     var grid = document.querySelector("[data-grid]");
     grid.innerHTML = "";
-    here.forEach(function (o) {
-      var card = buildCard(o);
-      card.id = "offer-" + o.id;
+    var groups = sortGroups(groupOffers(here));
+    groups.forEach(function (g) {
+      var card = buildCard(g);
+      card.id = "offer-" + pickTier(g, STATE.fare).id;
       grid.appendChild(card);
       watch(card);
     });
@@ -1905,7 +2173,10 @@ function getOffersByProvider(key) {
     var countEl = document.querySelector("[data-result-count]");
     countEl.innerHTML = "";
     countEl.appendChild(el("strong", null, String(here.length)));
-    countEl.appendChild(document.createTextNode(" offer" + (here.length === 1 ? "" : "s") + " in " + COUNTRIES[STATE.country] + (filtersActive ? " matching your filter" : "")));
+    countEl.appendChild(document.createTextNode(" code" + (here.length === 1 ? "" : "s") + " from "
+      + Object.keys(here.reduce(function (a, o) { a[o.paymentMethodKey] = 1; return a; }, {})).length
+      + " provider" + (Object.keys(here.reduce(function (a, o) { a[o.paymentMethodKey] = 1; return a; }, {})).length === 1 ? "" : "s")
+      + " in " + COUNTRIES[STATE.country] + (filtersActive ? " matching your filter" : "")));
 
     document.querySelector("[data-reset]").hidden = !filtersActive;
 
@@ -1927,12 +2198,13 @@ function getOffersByProvider(key) {
     if (away.length) {
       awayWrap.hidden = false;
       document.querySelector("[data-away-label]").textContent = "See " + away.length + " offer" + (away.length === 1 ? "" : "s") + " available in other countries";
-      away.forEach(function (o) { var card = buildCard(o); card.id = "offer-" + o.id; awayGrid.appendChild(card); });
+      sortGroups(groupOffers(away)).forEach(function (g) { awayGrid.appendChild(buildCard(g)); });
     } else {
       awayWrap.hidden = true;
     }
 
     renderProviders(live.filter(inCountry));
+    paintTableFade();
     renderJsonLd(here);
 
     if (!firstRender) { announce(countEl.textContent + ", sorted by " + sortLabel()); }
@@ -1958,6 +2230,8 @@ function getOffersByProvider(key) {
   readUrl();
   buildFilters();
   buildCountrySelect();
+  STATE.fare = readFare();
+  bindFare();
 
   document.querySelector("[data-sort]").addEventListener("change", function (e) {
     STATE.sort = e.target.value;
@@ -1972,6 +2246,11 @@ function getOffersByProvider(key) {
   });
 
   render();
+  (function () {
+    var box = document.querySelector(".vs-scroll");
+    if (box) { box.addEventListener("scroll", paintTableFade, { passive: true }); }
+    window.addEventListener("resize", paintTableFade, { passive: true });
+  })();
 
   /* If the offer service fails, degrade rather than error. StandingBenefits
      is a spoke-page concern; on the hub, an empty result set already reads
