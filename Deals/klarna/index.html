@@ -281,48 +281,33 @@ a { color: inherit; }
    Two stats (scoped to this provider) + the country control. No
    "providers listed" stat here, there is only one provider on this
    page. */
-.hero-controls { border-bottom: 1px solid var(--kq-line-soft); }
-.hero-controls-inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 18px 0;
-}
-.hero-stats-line {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.hero-stat-inline { display: flex; align-items: baseline; gap: 6px; }
-.hero-stat-inline dt { font-size: 11px; letter-spacing: var(--kq-track-caps); text-transform: uppercase; font-weight: 700; color: #4b4b4b; margin: 0; }
-.hero-stat-inline dd { margin: 0; font-family: var(--font-display); font-size: 18px; font-weight: 900; letter-spacing: var(--kq-track-display); }
 
+
+
+
+
+/* The country control now sits beside Sort by, so the two share a row. */
+.control-selects { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
 .geo { display: flex; align-items: center; gap: 10px; }
-.geo-label { font-size: 11px; letter-spacing: var(--kq-track-caps); text-transform: uppercase; font-weight: 700; color: #4b4b4b; }
+.geo-label { font-size: var(--kq-text-xs); letter-spacing: var(--kq-track-caps); text-transform: uppercase; font-weight: 700; }
 .geo select {
   appearance: none;
   background: var(--kq-page) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23090315' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center / 14px;
-  border: 1.5px solid var(--kq-line-strong);
-  border-radius: var(--kq-radius-pill);
-  color: var(--kq-ink);
-  font: 700 14px var(--font-sans);
-  padding: 8px 34px 8px 16px;
-  cursor: pointer;
+  border: 1px solid var(--kq-line-strong); border-radius: var(--kq-radius-pill); color: var(--kq-ink);
+  font: 600 13px var(--font-sans); min-height: 36px; padding: 6px 34px 6px 14px; cursor: pointer;
 }
 .geo select option { color: var(--kq-ink); }
 
-.geo-note {
-  font-size: 12px;
-  line-height: 1.4;
-  color: #4b4b4b;
-  max-width: 34rem;
-  margin: 0 0 14px;
-}
+/* A provider with nothing behind it should say so before the click, not after. */
+.chip[disabled] { opacity: .45; cursor: not-allowed; }
+.chip[disabled]:hover { border-color: var(--kq-line-strong); }
+
+/* Minimum spend is the fact that disqualifies people, so it reads at body size
+   beside the headline value rather than as a footnote pill. */
+.offer-spend { margin: 0; font-size: var(--kq-text-sm); font-weight: 700; color: var(--kq-ink); }
+.offer-spend .lbl { font-weight: 400; color: #4b4b4b; }
+
+.offer-cta .btn { font-size: 12px; }
 
 /* ---------- thin breadcrumb bar ---------- */
 .crumbbar { border-bottom: 1px solid var(--kq-line-soft); }
@@ -718,6 +703,8 @@ a { color: inherit; }
   .crosslink { padding: 24px; box-shadow: 7px 7px 0 0 var(--kq-pink); }
 
   .flight-widget { flex-direction: column; border-radius: 20px; padding: 8px; }
+  /* Touch target, not just at phone width: tablets tap too. */
+  .code-copy { min-height: 44px; padding: 6px 16px; }
   .fw-field { padding: 12px 16px; }
   .fw-div { display: none; }
   .fw-field + .fw-field { border-top: 1px solid var(--kq-line); }
@@ -737,7 +724,6 @@ a { color: inherit; }
   .btn-search { padding: 0 14px; font-size: 13px; }
   .hero h1 { font-size: clamp(2rem, 11vw, 3rem); }
   .offer-value { font-size: 36px; }
-  .code-copy { min-height: 44px; padding: 6px 16px; }
   .code-row { padding: 8px 8px 8px 12px; }
   .terms > summary { min-height: 44px; }
   .crosslink .btn { width: 100%; }
@@ -843,29 +829,6 @@ a { color: inherit; }
 </div>
 
 
-<!-- ======================= hero controls: stats + country ======================= -->
-<div class="hero-controls">
-  <div class="shell hero-controls-inner">
-    <dl class="hero-stats-line">
-      <div class="hero-stat-inline">
-        <dt>Live Klarna offers</dt>
-        <dd data-stat="live">0</dd>
-      </div>
-      <div class="hero-stat-inline">
-        <dt>Ending this week</dt>
-        <dd data-stat="soon">0</dd>
-      </div>
-    </dl>
-
-    <div class="geo">
-      <label class="geo-label" for="country-select">Showing offers for</label>
-      <select id="country-select" data-country-select></select>
-    </div>
-  </div>
-  <div class="shell">
-    <p class="geo-note">Country and language are set separately. Change the country above to see what applies where you are.</p>
-  </div>
-</div>
 
 <main id="deals-main">
 
@@ -876,6 +839,15 @@ a { color: inherit; }
         <div class="eyebrow-row"><span class="eyebrow"><span>Klarna codes</span></span></div>
         <h2 id="offers-heading">Live Klarna offers</h2>
         <p>Every current Klarna promo code on Laters.com. Standing plans and fees, which apply whether or not a code is live today, are below the offers.</p>
+      </div>
+
+      <div class="controls">
+        <div class="control-selects">
+        <div class="geo">
+          <label class="geo-label" for="country-select">Country</label>
+          <select id="country-select" data-country-select></select>
+        </div>
+        </div>
       </div>
 
       <p class="result-line">
@@ -1440,6 +1412,13 @@ function getOffersByProvider(key) {
     if (value.unit) { h3.appendChild(el("span", "unit", value.unit)); }
     li.appendChild(h3);
 
+    if (offer.minSpend) {
+      var spend = el("p", "offer-spend");
+      spend.appendChild(el("span", "lbl", "Min spend "));
+      spend.appendChild(document.createTextNode((offer.currency ? offer.currency + " " : "") + offer.minSpend));
+      li.appendChild(spend);
+    }
+
     var prov = el("p", "offer-provider");
     var mark = el("span", "mark mark--sm", provider.initials);
     mark.setAttribute("aria-hidden", "true");
@@ -1472,12 +1451,15 @@ function getOffersByProvider(key) {
     li.appendChild(codeRow);
 
     var conds = el("ul", "conds");
-    if (offer.minSpend) { conds.appendChild(el("li", null, "Min spend " + (offer.currency ? offer.currency + " " : "") + offer.minSpend)); }
     if (offer.maxDiscount && offer.discountType !== "fixed") { conds.appendChild(el("li", null, "Capped at " + (offer.currency ? offer.currency + " " : "") + offer.maxDiscount)); }
     if (offer.newUsersOnly) { conds.appendChild(el("li", null, "New customers only")); }
     if (offer.firstTransactionOnly) { conds.appendChild(el("li", null, "First booking only")); }
     if (conds.children.length) { li.appendChild(conds); }
 
+    /* 6. expiry and eligibility, folded into the terms disclosure below.
+       Nothing in the sheet carries an end date, so on the card face this
+       was eleven repetitions of "No end date listed". When real end dates
+       land, promote the countdown back onto the card. */
     var meta = el("div", "offer-meta");
     var expRow = el("div", "row");
     if (expiry.soon) {
@@ -1495,7 +1477,6 @@ function getOffersByProvider(key) {
     var ctyRow = el("div", "row");
     ctyRow.appendChild(el("span", null, "Available in " + offer.countries.join(", ")));
     meta.appendChild(ctyRow);
-    li.appendChild(meta);
 
     var terms = el("details", "terms");
     var sum = el("summary", null, "Full terms and how to redeem");
@@ -1503,6 +1484,7 @@ function getOffersByProvider(key) {
     var ol = el("ol");
     offer.redemptionSteps.forEach(function (step) { ol.appendChild(el("li", null, step)); });
     terms.appendChild(ol);
+    terms.appendChild(meta);
     terms.appendChild(el("p", "terms-fine", "Offer terms can change without notice."));
     terms.addEventListener("toggle", function () { if (terms.open) { track("offer_terms_opened", { offerId: offer.id }); } });
     li.appendChild(terms);
@@ -1733,8 +1715,6 @@ function getOffersByProvider(key) {
     var here = sortByValue(providerLive.filter(inCountry));
     var away = sortByValue(providerLive.filter(function (o) { return !inCountry(o); }));
 
-    document.querySelector('[data-stat="live"]').textContent = here.length;
-    document.querySelector('[data-stat="soon"]').textContent = here.filter(function (o) { return msLeft(o) <= 7 * DAY; }).length;
     document.querySelector("[data-country-select]").value = STATE.country;
     document.querySelector("[data-hero-sub]").textContent =
       (here.length ? here.length + " live Klarna offer" + (here.length === 1 ? "" : "s") + " on Laters.com today" : "No live Klarna offer right now") +
@@ -1777,7 +1757,7 @@ function getOffersByProvider(key) {
     awayGrid.innerHTML = "";
     if (away.length) {
       awayWrap.hidden = false;
-      document.querySelector("[data-away-label]").textContent = away.length + " Klarna offer" + (away.length === 1 ? "" : "s") + " not available in " + COUNTRIES[STATE.country];
+      document.querySelector("[data-away-label]").textContent = "See " + away.length + " Klarna offer" + (away.length === 1 ? "" : "s") + " available in other countries";
       away.forEach(function (o) { var card = buildCard(o); card.id = "offer-" + o.id; awayGrid.appendChild(card); });
     } else {
       awayWrap.hidden = true;
