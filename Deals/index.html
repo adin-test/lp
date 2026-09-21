@@ -789,8 +789,6 @@ a { color: inherit; }
 }
 
 /* ---------- hero proof ---------- */
-.hero-proof { margin: 0; font-size: var(--kq-text-sm); font-weight: 700; color: var(--kq-on-ink); }
-.hero-proof .sep { opacity: .5; margin: 0 8px; }
 
 /* ---------- responsive ---------- */
 
@@ -886,7 +884,6 @@ a { color: inherit; }
     <div class="hero-center">
       <h1>Pay later flight <span class="accent">deals</span></h1>
       <p class="hero-sub">Search and compare fares on Laters.com, then copy a live promo code from your pay later provider and apply it at checkout.</p>
-      <p class="hero-proof" data-proof></p>
     </div>
 
     <div class="hero-panel-wrap">
@@ -2188,12 +2185,6 @@ function getOffersByProvider(key) {
       faqs.push({ "@type": "Question", "name": q, "acceptedAnswer": { "@type": "Answer", "text": a } });
     });
 
-    /* Finding 05. dateModified is the one date signal worth emitting on a
-       page whose whole pitch is freshness. */
-    var lastVerified = getOffers().reduce(function (m, o) {
-      return (o.lastVerifiedAt && o.lastVerifiedAt > m) ? o.lastVerifiedAt : m;
-    }, "");
-
     var graph = {
       "@context": "https://schema.org",
       "@graph": [
@@ -2202,6 +2193,9 @@ function getOffersByProvider(key) {
           "@id": PAGE_URL,
           "url": PAGE_URL,
           "name": document.title,
+          /* The one date signal worth emitting on a page whose pitch is
+             freshness. Reads the byline constant, so the page and its
+             structured data cannot disagree. */
           "dateModified": PAGE_UPDATED
         },
         {
@@ -2292,15 +2286,6 @@ function getOffersByProvider(key) {
     document.title = "Pay Later Flight Deals: " + inCountryLive.length + " Live Promo Code"
       + (inCountryLive.length === 1 ? "" : "s") + " (" + MONTHS[now.getMonth()] + " "
       + now.getFullYear() + ") | Laters.com";
-
-    var lastVerified = getOffers().reduce(function (m, o) {
-      return (o.lastVerifiedAt && o.lastVerifiedAt > m) ? o.lastVerifiedAt : m;
-    }, "");
-    var providerCount = Object.keys(inCountryLive.reduce(function (a, o) { a[o.paymentMethodKey] = 1; return a; }, {})).length;
-    document.querySelector("[data-proof]").textContent =
-      inCountryLive.length + " live code" + (inCountryLive.length === 1 ? "" : "s") + " across "
-      + providerCount + " provider" + (providerCount === 1 ? "" : "s")
-      + (lastVerified ? ", checked " + fmtDate(lastVerified) : "");
 
     STATE.fareCur = fareCurrency(inCountryLive);
     /* The header pill is a replica of the site chrome, and it was hardcoded to

@@ -807,8 +807,6 @@ a { color: inherit; }
 }
 
 /* ---------- hero proof ---------- */
-.hero-proof { margin: 0; font-size: var(--kq-text-sm); font-weight: 700; color: var(--kq-on-ink); }
-.hero-proof .sep { opacity: .5; margin: 0 8px; }
 
 /* ---------- responsive ---------- */
 
@@ -898,7 +896,6 @@ a { color: inherit; }
       </p>
       <h1>Klarna promo <span class="accent">codes</span></h1>
       <p class="hero-sub" data-hero-sub>Live Klarna offers on Laters.com, copied and applied at checkout in one place.</p>
-      <p class="hero-proof" data-proof></p>
     </div>
 
     <div class="hero-panel-wrap">
@@ -2048,11 +2045,6 @@ function getOffersByProvider(key) {
      an FAQ block on-page. */
 
   function renderJsonLd(shown) {
-    /* Finding 05. dateModified on a page whose pitch is freshness. */
-    var lastVerified = getOffers().reduce(function (m, o) {
-      return (o.lastVerifiedAt && o.lastVerifiedAt > m) ? o.lastVerifiedAt : m;
-    }, "");
-
     var graph = {
       "@context": "https://schema.org",
       "@graph": [
@@ -2061,6 +2053,9 @@ function getOffersByProvider(key) {
           "@id": PAGE_URL,
           "url": PAGE_URL,
           "name": document.title,
+          /* The one date signal worth emitting on a page whose pitch is
+             freshness. Reads the byline constant, so the page and its
+             structured data cannot disagree. */
           "dateModified": PAGE_UPDATED
         },
         {
@@ -2109,13 +2104,6 @@ function getOffersByProvider(key) {
     var away = sortByValue(providerLive.filter(function (o) { return !inCountry(o); }));
 
     document.querySelector("[data-country-select]").value = STATE.country;
-
-    var lastVerified = getOffers().reduce(function (m, o) {
-      return (o.lastVerifiedAt && o.lastVerifiedAt > m) ? o.lastVerifiedAt : m;
-    }, "");
-    document.querySelector("[data-proof]").textContent =
-      here.length + " live Klarna code" + (here.length === 1 ? "" : "s")
-      + (lastVerified ? ", checked " + fmtDate(lastVerified) : "");
 
     STATE.fareCur = fareCurrency(here);
     /* The header pill is a replica of the site chrome, and it was hardcoded to
