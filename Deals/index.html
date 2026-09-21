@@ -369,7 +369,10 @@ a { color: inherit; }
 /* Live section heads are centered under a rotated eyebrow sticker,
    at a noticeably bigger display clamp than we had. */
 .section-head { margin-bottom: 32px; text-align: center; }
-.section-head h2 { font-size: clamp(30px, 4.1vw, 48px); line-height: .88; margin-inline: auto; }
+.section-head h2 { font-size: clamp(30px, 4.1vw, 48px); line-height: .88; margin-inline: auto; text-wrap: balance; }
+/* Matches .kq-h2--stack on the live pages: a head written as two spans sets
+   as two display lines rather than one wrapped sentence. */
+.section-head h2 span { display: block; }
 .section-head p { margin: 18px auto 0; max-width: 44rem; font-size: var(--kq-text); line-height: var(--kq-lh); text-wrap: pretty; }
 
 /* ---------- comparison table ---------- */
@@ -904,7 +907,7 @@ a { color: inherit; }
     <div class="shell">
       <div class="section-head">
         <div class="eyebrow-row"><span class="eyebrow"><span>Compare providers</span></span></div>
-        <h2 id="best-heading">Best offer per provider today</h2>
+        <h2 id="best-heading">Best Offer Per Provider Today</h2>
         <p>Compare top providers and find the best deal for your flight. Check the minimum spend and choose the offer that gives you the most value!</p>
       </div>
 
@@ -947,7 +950,7 @@ a { color: inherit; }
     <div class="shell">
       <div class="section-head">
         <div class="eyebrow-row"><span class="eyebrow"><span>Every live code</span></span></div>
-        <h2 id="all-heading">All live offers</h2>
+        <h2 id="all-heading">All Live Offers</h2>
         <p>Filter by provider. Filters stay in the address bar so you can share a filtered view.</p>
       </div>
 
@@ -997,7 +1000,7 @@ a { color: inherit; }
     <div class="shell">
       <div class="section-head">
         <div class="eyebrow-row"><span class="eyebrow"><span>By provider</span></span></div>
-        <h2 id="providers-heading">Browse by provider</h2>
+        <h2 id="providers-heading">Browse by Provider</h2>
         <p>Each provider page carries its live offers plus its standing benefits, such as plan structure and fees, for when nothing is currently running.</p>
       </div>
       <ul class="providers" data-provider-index></ul>
@@ -1009,7 +1012,7 @@ a { color: inherit; }
     <div class="shell">
       <div class="crosslink">
         <div>
-          <h2>How does pay later actually work?</h2>
+          <h2>How Does Pay Later Actually Work?</h2>
           <p>This page covers what is on offer today. For how each method splits a fare, what it costs, and who can be approved, read the payment method guides.</p>
         </div>
         <a class="btn" href="https://laters.com/fly-now-pay-later">
@@ -1025,7 +1028,7 @@ a { color: inherit; }
     <div class="shell">
       <div class="section-head">
         <div class="eyebrow-row"><span class="eyebrow"><span>Promo code FAQ</span></span></div>
-        <h2 id="faq-heading">Promo code questions</h2>
+        <h2 id="faq-heading">Promo Code Questions</h2>
       </div>
       <div class="faq">
 
@@ -1395,11 +1398,15 @@ function getOffersByProvider(key) {
   function isExpired(offer) { var d = endDate(offer); return d !== null && d.getTime() <= new Date().getTime(); }
   function msLeft(offer) { var d = endDate(offer); return d === null ? Infinity : d.getTime() - new Date().getTime(); }
 
+  /* "10 September 2026", the format laters.com uses on its payment pages.
+     Pinned to en-GB rather than the visitor's locale: the rest of the page
+     is written in English and a US locale would render the same date as
+     "September 10, 2026", which is a different house style on the same site. */
   function fmtDate(value, tz) {
-    var opts = { day: "numeric", month: "short", year: "numeric" };
+    var opts = { day: "numeric", month: "long", year: "numeric" };
     if (tz) { opts.timeZone = tz; }
-    try { return new Intl.DateTimeFormat(undefined, opts).format(new Date(value)); }
-    catch (e) { return new Intl.DateTimeFormat(undefined, { day: "numeric", month: "short", year: "numeric" }).format(new Date(value)); }
+    try { return new Intl.DateTimeFormat("en-GB", opts).format(new Date(value)); }
+    catch (e) { return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" }).format(new Date(value)); }
   }
 
   function expiryInfo(offer) {
