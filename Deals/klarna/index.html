@@ -786,6 +786,11 @@ a { color: inherit; }
   color: inherit; text-decoration: underline;
   text-decoration-color: var(--kq-pink-on-light); text-decoration-thickness: 2px; text-underline-offset: 3px;
 }
+/* Matches .kq-byline-avatar on the live pages. */
+.byline-avatar {
+  display: inline-block; vertical-align: middle; width: 20px; height: 20px;
+  margin-right: 8px; border-radius: 50%; object-fit: cover; background: var(--kq-line);
+}
 .byline-when::before { content: "\00b7"; margin-right: 10px; }
 .byline time { font-variant-numeric: tabular-nums; white-space: nowrap; }
 /* Once the row stacks, the crumbs and the byline are already on separate
@@ -1024,7 +1029,7 @@ a { color: inherit; }
       </ol>
     </nav>
     <p class="byline">
-      <span class="byline-who">Edited by <a href="https://laters.com/blog/authors/adinda-irawan">Adinda Irawan</a></span>
+      <span class="byline-who"><img class="byline-avatar" src="../media/byline-adinda.webp" width="20" height="20" alt="" aria-hidden="true">Edited by <a href="https://laters.com/blog/authors/adinda-irawan">Adinda Irawan</a></span>
       <span class="byline-when">Updated <time data-updated datetime="2026-09-21"></time></span>
     </p>
   </div>
@@ -1140,17 +1145,11 @@ a { color: inherit; }
         <div>
           <h2>How Does Klarna Actually Work?</h2>
           <p>This page covers what is on offer today. For full plan mechanics, fees, and eligibility, read the Klarna payment guide.</p>
-        <figure class="ph ph--side">
-          <div>
-            <span class="ph-tag">Image slot</span>
-            <p class="ph-spec"><code>klarna-how-it-works.jpg</code> &middot; <code>800x600</code><br>Klarna's own press or brand imagery for this one, not stock: it is the provider this page is about. No readable prices or checkout UI, which date fast.</p>
-          </div>
+        <!-- Klarna's own campaign photography, as used on laters.com/payment/klarna. Swap in a customised version by replacing this file. -->
+        <figure class="fig">
+          <img src="../media/klarna-how-it-works.webp" width="1080" height="720" loading="lazy" decoding="async"
+               alt="A Klarna billboard reading “Think smart, pay smarter” above Macy’s on West 34th Street, New York">
         </figure>
-        <!-- When the art exists, replace the figure above with:
-             <figure class="fig">
-               <img src="../media/klarna-how-it-works.jpg" width="800" height="600" loading="lazy" decoding="async"
-                    alt="Paying for a flight with Klarna at checkout">
-             </figure> -->
         </div>
         <a class="btn" href="https://laters.com/payment/klarna">
           Klarna payment guide
