@@ -328,6 +328,37 @@ a { color: inherit; }
 
 .offer-cta .btn { font-size: 12px; }
 
+/* ---------- social proof strip ----------
+   Sits between the hero and the breadcrumb row, as on the live payment pages.
+   The live version pairs a Trustpilot widget with the Google rating; the
+   widget is a third-party script, so only the Google half is rendered here. */
+.proofbar { border-bottom: 1px solid var(--kq-line-soft); }
+.proofbar-inner {
+  display: flex; flex-direction: column; align-items: center; gap: 17px;
+  max-width: 900px; margin-inline: auto; padding: 22px 20px; text-align: center;
+}
+.proofbar-h {
+  margin: 0; max-width: 42rem;
+  font-family: var(--font-display); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(24px, 13.6px + 3.3vw, 36px); line-height: .95; letter-spacing: -.02em;
+  text-wrap: balance; color: var(--kq-ink);
+}
+.proofbar-rating {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  min-height: 72px; text-decoration: none; color: inherit; transition: opacity var(--kq-ease);
+}
+.proofbar-rating:hover { opacity: .8; }
+.proofbar-rating img { display: block; height: 28px; width: auto; }
+.proofbar-score { display: flex; align-items: baseline; gap: 3px; font-size: 10px; }
+.proofbar-score b { font-size: 20px; font-weight: 600; line-height: 1.25; }
+@media (min-width: 768px) { .proofbar-inner { padding-block: 26px; } }
+
+/* ---------- breadcrumb row ----------
+   Crumbs left, byline opposite, both dropping to their own line when the row
+   runs out of width. */
+.crumb-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 24px; }
+.crumb-row .crumbs { padding-bottom: 0; }
+
 /* ---------- thin breadcrumb bar ----------
    Sits below the hero, on white, so it never competes with the hero's
    own style. Structured-data breadcrumbs still emit regardless. */
@@ -672,11 +703,12 @@ a { color: inherit; }
 /* ---------- byline bar ---------- */
 
 .byline-bar { border-bottom: 1px solid var(--kq-line); }
+/* The live pages set the byline in sentence case at body-small when it sits in
+   the breadcrumb row, not in the uppercase caps treatment it gets on its own. */
 .byline {
-  display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 0 10px;
-  margin: 0; padding: 16px 0 18px;
-  font-size: var(--kq-text-xs); font-weight: 700;
-  letter-spacing: var(--kq-track-caps); text-transform: uppercase; color: var(--kq-ink);
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 10px;
+  margin: 0; padding: 12px 0;
+  font-size: var(--kq-text-sm); font-weight: 400; color: #4b4b4b;
 }
 .byline a {
   color: inherit; text-decoration: underline;
@@ -684,6 +716,13 @@ a { color: inherit; }
 }
 .byline-when::before { content: "\00b7"; margin-right: 10px; }
 .byline time { font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* Once the row stacks, the crumbs and the byline are already on separate
+   lines, so the middle dot would just lead the byline. */
+@media (max-width: 720px) {
+  .crumb-row { gap: 0; }
+  .byline { padding-top: 0; }
+  .byline-when::before { content: none; }
+}
 
 /* ---------- small group label ---------- */
 
@@ -719,7 +758,6 @@ a { color: inherit; }
   border: 1.5px solid var(--kq-ink); border-radius: var(--kq-radius-pill); padding: 5px 16px; min-height: 40px;
 }
 .fare-field:focus-within { outline: 2px solid var(--kq-ink); outline-offset: 2px; }
-.fare-cur { font: 700 12px var(--font-mono); color: #4b4b4b; }
 .fare input { width: 7ch; border: 0; background: transparent; font: 700 15px var(--font-sans); color: var(--kq-ink); }
 .fare input:focus { outline: 0; }
 .fare input::-webkit-outer-spin-button, .fare input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -810,7 +848,7 @@ a { color: inherit; }
 <header class="topbar">
   <div class="shell topbar-inner">
     <a class="topbar-logo" href="https://laters.com/" aria-label="Laters.com home">
-      <img src="media/laters-logo.svg" width="125" height="30" alt="Laters.com" width="150" height="36">
+      <img src="media/laters-logo.svg" width="125" height="30" alt="Laters.com">
     </a>
     <div class="topbar-actions">
       <span class="topbar-pills" aria-hidden="true"><span data-topbar-cur>USD</span><span>EN</span></span>
@@ -886,15 +924,31 @@ a { color: inherit; }
   </div>
 </section>
 
+<!-- ======================= social proof ======================= -->
+<section class="proofbar" aria-label="Why travelers choose Laters.com">
+  <div class="proofbar-inner">
+    <h2 class="proofbar-h">Over <span>a million</span> travelers a year<br>find flights on Laters.com</h2>
+    <a class="proofbar-rating" href="https://g.page/r/CcdJ2oIi5n1REAE/" target="_blank" rel="noopener noreferrer"
+       aria-label="Rated 4.8 out of 5 on Google. Read reviews">
+      <img src="media/google-wordmark.svg" width="75" height="24" alt="Google">
+      <span class="proofbar-score" aria-hidden="true"><b>4.8</b><span>/ 5 on Google</span></span>
+    </a>
+  </div>
+</section>
+
 <!-- ======================= thin breadcrumb bar ======================= -->
 <div class="crumbbar">
-  <div class="shell">
+  <div class="shell crumb-row">
     <nav class="crumbs" aria-label="Breadcrumb">
       <ol>
         <li><a href="https://laters.com/">Home</a></li>
         <li aria-current="page">Deals</li>
       </ol>
     </nav>
+    <p class="byline">
+      <span class="byline-who">Edited by <a href="https://laters.com/blog/authors/adinda-irawan">Adinda Irawan</a></span>
+      <span class="byline-when">Updated <time data-updated datetime="2026-09-21"></time></span>
+    </p>
   </div>
 </div>
 
@@ -913,17 +967,16 @@ a { color: inherit; }
 
       <div class="fare">
         <div class="geo">
-          <label class="geo-label" for="country-select">Country</label>
-          <select id="country-select" data-country-select></select>
+          <label class="geo-label" for="country-select">Currency</label>
+          <select id="country-select" data-country-select aria-describedby="fare-hint"></select>
         </div>
         <span class="fare-div" aria-hidden="true"></span>
         <label for="fare-input">Your fare</label>
         <span class="fare-field">
-          <span class="fare-cur" data-fare-cur></span>
           <input id="fare-input" type="number" min="0" step="10" inputmode="numeric" placeholder="e.g. 680" data-fare>
         </span>
         <button type="button" class="btn-reset" data-fare-clear hidden>Clear</button>
-        <p class="fare-hint" data-fare-hint></p>
+        <p class="fare-hint" id="fare-hint" data-fare-hint></p>
       </div>
 
       <div class="vs">
@@ -1080,7 +1133,7 @@ a { color: inherit; }
 
     <div class="footer-top">
       <div class="footer-brand">
-        <img src="media/laters-logo.svg" width="125" height="30" alt="Laters.com" width="150" height="36">
+        <img src="media/laters-logo.svg" width="125" height="30" alt="Laters.com">
         <p class="footer-blurb">Book flights across 650+ airlines and pay later, your way. Split the cost, pay in 4, or spread larger fares, with 40+ providers in a single checkout.</p>
       </div>
       <div class="footer-follow">
@@ -1967,7 +2020,10 @@ function getOffersByProvider(key) {
     Object.keys(COUNTRIES).forEach(function (code) {
       var o = document.createElement("option");
       o.value = code;
-      o.textContent = COUNTRIES[code];
+      /* Currency-led, because this control sits beside a fare. The market it
+         actually filters on is named in the hint below, which the select is
+         described by, so nothing is lost by not spelling it out here. */
+      o.textContent = COUNTRY_CURRENCY[code] || code;
       sel.appendChild(o);
     });
     sel.value = STATE.country;
@@ -2146,7 +2202,7 @@ function getOffersByProvider(key) {
           "@id": PAGE_URL,
           "url": PAGE_URL,
           "name": document.title,
-          "dateModified": lastVerified || undefined
+          "dateModified": PAGE_UPDATED
         },
         {
           "@type": "BreadcrumbList",
@@ -2247,7 +2303,6 @@ function getOffersByProvider(key) {
       + (lastVerified ? ", checked " + fmtDate(lastVerified) : "");
 
     STATE.fareCur = fareCurrency(inCountryLive);
-    document.querySelector("[data-fare-cur]").textContent = STATE.fareCur || "";
     /* The header pill is a replica of the site chrome, and it was hardcoded to
        IDR while the panel below defaulted to the United States. Follow the
        country control, which is the only currency signal on this page a
@@ -2340,6 +2395,12 @@ function getOffersByProvider(key) {
 
   readUrl();
   buildFilters();
+  /* Page-updated date, set by hand when the page changes. Deliberately not
+     new Date(): a byline that reprints today on every load claims a freshness
+     nobody earned. */
+  var PAGE_UPDATED = "2026-09-21";
+  document.querySelector("[data-updated]").textContent = fmtDate(PAGE_UPDATED);
+
   buildCountrySelect();
   STATE.fare = readFare();
   bindFare();
