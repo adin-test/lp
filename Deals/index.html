@@ -6,14 +6,25 @@
 <title>Pay Later Flight Deals: Live Promo Codes | Laters.com</title>
 <meta name="description" content="Live promo codes for pay later flights with Klarna, Afterpay, Zip and more. Copy a code and search flights in one action.">
 
-<!-- Finding 08: sharing. TODO: generate /og/deals.png with the live offer
-     count baked in, add og:image, then switch twitter:card to summary_large_image. -->
+<!-- Sharing. Points at the same Sanity-hosted card laters.com already serves
+     on its own pages, so a shared link previews correctly today and nothing
+     404s. A deals-specific 1200x630 with the live code count baked in is
+     still worth making; when it exists, swap this one URL. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Laters.com">
 <meta property="og:title" content="Pay Later Flight Deals: Live Promo Codes | Laters.com">
 <meta property="og:description" content="Live promo codes for pay later flights with Klarna, Afterpay, Zip and more. Copy a code and search flights in one action.">
 <meta property="og:url" content="https://laters.com/deals">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://cdn.sanity.io/images/yge09889/production/cf7dbb66981bd5dde28d202ba4d7814a68311ac9-1200x631.png?w=1200&amp;h=630&amp;fit=crop&amp;auto=format">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Laters.com — book flights now, pay later">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@latershq">
+<meta name="twitter:title" content="Pay Later Flight Deals: Live Promo Codes | Laters.com">
+<meta name="twitter:description" content="Live promo codes for pay later flights with Klarna, Afterpay, Zip and more. Copy a code and search flights in one action.">
+<meta name="twitter:image" content="https://cdn.sanity.io/images/yge09889/production/cf7dbb66981bd5dde28d202ba4d7814a68311ac9-1200x631.png?w=1200&amp;h=630&amp;fit=crop&amp;auto=format">
+<meta name="twitter:image:alt" content="Laters.com — book flights now, pay later">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23090315'/%3E%3Cpath d='M11 8v13h10' stroke='%23ffb3c7' stroke-width='3.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" type="image/svg+xml">
 <meta name="robots" id="robots-meta" content="index, follow">
 <link rel="canonical" id="canonical-link" href="https://laters.com/deals">
@@ -147,8 +158,16 @@ a { color: inherit; }
 /* ---------- topbar ---------- */
 
 .topbar { position: sticky; top: 0; z-index: 30; background: var(--kq-ink); }
+/* The topbar is sticky at 64px, so anything an in-page link targets has to
+   clear it or the card lands underneath the header. */
+.offer, h2[id], h3[id], section[id], [id^="offer-"] { scroll-margin-top: 84px; }
 .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px; }
 .topbar-logo img { display: block; height: 30px; width: auto; }
+/* The logo is a copy committed to this repo and referenced relatively, so it
+   travels with the page on whatever host serves it. Do not replace it with
+   laters.com's own /_next/static/immutable/media/laters-logo-black.<hash>.svg:
+   that hash rotates on every build and would 404 the next time the site
+   ships. In the real codebase this becomes the app's own logo import. */
 .topbar-actions { display: flex; align-items: center; gap: 10px; }
 .btn-search {
   display: inline-flex; align-items: center; height: 38px; padding: 0 20px;
@@ -418,7 +437,7 @@ a { color: inherit; }
 }
 .offer:hover { border-color: var(--kq-card-line-hover); box-shadow: var(--kq-card-shadow-hover); }
 .offer--expired { box-shadow: none; background: var(--kq-line-soft); }
-.offer--expired .offer-value, .offer--expired .offer-title { opacity: .62; }
+.offer--expired .offer-value, .offer--expired .offer-summary { opacity: .62; }
 
 .offer-value { font-family: var(--font-display); font-size: 42px; font-weight: 900; line-height: .92; letter-spacing: var(--kq-track-display); text-transform: uppercase; margin: 0; }
 .offer-value .unit { font-size: 26px; }
@@ -428,7 +447,6 @@ a { color: inherit; }
 .offer-provider a:hover { text-decoration-color: var(--kq-ink); }
 .offer-provider .provider-meta { display: block; font-size: var(--kq-text-xs); font-weight: 400; letter-spacing: var(--kq-track-caps); text-transform: uppercase; color: #4b4b4b; }
 
-.offer-title { font-size: var(--kq-title-sm); font-weight: 700; line-height: 1.3; margin: 0; }
 .offer-summary { font-size: var(--kq-text-sm); line-height: var(--kq-lh); margin: 0; color: #4b4b4b; }
 
 .code-row { display: flex; align-items: center; gap: 10px; border: 1px dashed var(--kq-line-strong); border-radius: var(--kq-radius-sm); padding: 10px 12px; }
@@ -703,7 +721,6 @@ a { color: inherit; }
 .tier input { margin: 0; accent-color: var(--kq-ink); }
 .tier-spend { color: #4b4b4b; }
 .tier-value { font-weight: 700; text-align: right; }
-.tier-code { grid-column: 2 / -1; font: 700 12px var(--font-mono); letter-spacing: .04em; }
 .tier.is-active { background: var(--kq-line-soft); }
 .tier.is-out { opacity: .5; }
 
@@ -773,10 +790,10 @@ a { color: inherit; }
 <header class="topbar">
   <div class="shell topbar-inner">
     <a class="topbar-logo" href="https://laters.com/" aria-label="Laters.com home">
-      <img src="media/laters-logo.svg" alt="Laters.com" width="150" height="36">
+      <img src="media/laters-logo.svg" width="125" height="30" alt="Laters.com" width="150" height="36">
     </a>
     <div class="topbar-actions">
-      <span class="topbar-pills" aria-hidden="true"><span>IDR</span><span>EN</span></span>
+      <span class="topbar-pills" aria-hidden="true"><span data-topbar-cur>USD</span><span>EN</span></span>
       <a class="btn-search" href="https://laters.com/">Search flights</a>
     </div>
   </div>
@@ -875,6 +892,16 @@ a { color: inherit; }
         <p>Compare top providers and find the best deal for your flight. Check the minimum spend and choose the offer that gives you the most value!</p>
       </div>
 
+      <div class="fare">
+        <label for="fare-input">Your fare</label>
+        <span class="fare-field">
+          <span class="fare-cur" data-fare-cur></span>
+          <input id="fare-input" type="number" min="0" step="10" inputmode="numeric" placeholder="e.g. 680" data-fare>
+        </span>
+        <button type="button" class="btn-reset" data-fare-clear hidden>Clear</button>
+        <p class="fare-hint" data-fare-hint></p>
+      </div>
+
       <div class="vs">
         <div class="vs-scroll" tabindex="0" role="region" aria-label="Best offer per provider, scrollable table">
           <table>
@@ -924,16 +951,6 @@ a { color: inherit; }
             </select>
           </div>
         </div>
-      </div>
-
-      <div class="fare">
-        <label for="fare-input">Your fare</label>
-        <span class="fare-field">
-          <span class="fare-cur" data-fare-cur></span>
-          <input id="fare-input" type="number" min="0" step="10" inputmode="numeric" placeholder="e.g. 680" data-fare>
-        </span>
-        <button type="button" class="btn-reset" data-fare-clear hidden>Clear</button>
-        <p class="fare-hint" data-fare-hint></p>
       </div>
 
       <p class="result-line">
@@ -1043,7 +1060,7 @@ a { color: inherit; }
 
     <div class="footer-top">
       <div class="footer-brand">
-        <img src="media/laters-logo.svg" alt="Laters.com" width="150" height="36">
+        <img src="media/laters-logo.svg" width="125" height="30" alt="Laters.com" width="150" height="36">
         <p class="footer-blurb">Book flights across 650+ airlines and pay later, your way. Split the cost, pay in 4, or spread larger fares, with 40+ providers in a single checkout.</p>
       </div>
       <div class="footer-follow">
@@ -1411,13 +1428,21 @@ function getOffersByProvider(key) {
   /* ---------- url state ---------- */
 
   var PARAM_KEYS = ["country", "provider", "sort"];
+  /* Set once the visitor picks a country themselves, so an explicit choice
+     always reaches the address bar and survives being shared, while an
+     auto-detected one stays out of it and off the canonical. */
+  var COUNTRY_CHOSEN = false;
+
   var BOOT_COUNTRY = null;
   STATE.fare = null;
 
   function readUrl() {
     BOOT_COUNTRY = detectCountry();
     var p = new URLSearchParams(window.location.search);
-    PARAM_KEYS.forEach(function (k) { var v = p.get(k); if (v) { STATE[k] = v; } });
+    PARAM_KEYS.forEach(function (k) {
+      var v = p.get(k);
+      if (v) { STATE[k] = v; if (k === "country") { COUNTRY_CHOSEN = true; } }
+    });
     if (!STATE.country || !COUNTRIES[STATE.country]) { STATE.country = BOOT_COUNTRY; }
   }
 
@@ -1428,7 +1453,7 @@ function getOffersByProvider(key) {
       if (k === "country") { return; }
       if (STATE[k] !== DEFAULTS[k]) { p.set(k, STATE[k]); filtered = true; }
     });
-    if (STATE.country !== BOOT_COUNTRY) { p.set("country", STATE.country); }
+    if (COUNTRY_CHOSEN || STATE.country !== BOOT_COUNTRY) { p.set("country", STATE.country); }
     var qs = p.toString();
     window.history.replaceState(null, "", window.location.pathname + (qs ? "?" + qs : ""));
     document.getElementById("robots-meta").setAttribute("content", filtered ? "noindex, follow" : "index, follow");
@@ -1666,7 +1691,11 @@ function getOffersByProvider(key) {
     prov.appendChild(provText);
     li.appendChild(prov);
 
-    li.appendChild(el("p", "offer-title", isLadder ? ladderTitle(tiers, provider) : tiers[0].title));
+    /* No offer-title paragraph. It restated the headline and the provider line
+       word for word ("USD 25 off" sitting above "USD 25 off flights with
+       Afterpay"), and every condition it carried is already in the summary.
+       The full sentence still goes out in the JSON-LD, and reaches screen
+       readers as the tail of the heading. */
     li.appendChild(el("p", "offer-summary", tiers[0].summary));
 
     /* One promotion, one copy affordance. A ladder offers its codes as
@@ -1687,26 +1716,33 @@ function getOffersByProvider(key) {
         lab.appendChild(r);
         lab.appendChild(el("span", "tier-spend", "Spend " + money(t.currency, t.minSpend) + " or more"));
         lab.appendChild(el("span", "tier-value", v.main + v.unit));
-        lab.appendChild(el("span", "tier-code", t.code));
+        /* No code on the tier row. The code row below already shows the selected
+           tier's code next to its copy button, and printing it in both places
+           put the same string on the card twice. What you choose between here
+           is the spend threshold and what it pays, not the string. */
         fs.appendChild(lab);
         rows.push({ input: r, tier: t, label: lab });
       });
       li.appendChild(fs);
-    } else {
-      var codeRow = el("div", "code-row");
-      if (tiers[0].code) {
-        codeRow.appendChild(el("span", "code", tiers[0].code));
-        var copyBtn = el("button", "code-copy");
-        copyBtn.type = "button";
-        copyBtn.textContent = "Tap to copy";
-        copyBtn.setAttribute("aria-label", "Copy code " + tiers[0].code);
-        copyBtn.addEventListener("click", function () { doCopy(active, copyBtn, li); });
-        codeRow.appendChild(copyBtn);
-      } else {
-        codeRow.appendChild(el("span", "code code--auto", "Applies automatically"));
-      }
-      li.appendChild(codeRow);
     }
+
+    /* Every card with a code now carries a visible code and a copy button, ladders
+       included, showing whichever tier is selected. Without this the two largest
+       offers in the set, up to USD 200 off, could only be copied through the CTA. */
+    var codeText = null, copyBtn = null;
+    var codeRow = el("div", "code-row");
+    if (tiers[0].code) {
+      codeText = el("span", "code", active.code);
+      codeRow.appendChild(codeText);
+      copyBtn = el("button", "code-copy");
+      copyBtn.type = "button";
+      copyBtn.textContent = "Tap to copy";
+      copyBtn.addEventListener("click", function () { doCopy(active, copyBtn, li); });
+      codeRow.appendChild(copyBtn);
+    } else {
+      codeRow.appendChild(el("span", "code code--auto", "Applies automatically"));
+    }
+    li.appendChild(codeRow);
 
     var conds = el("ul", "conds");
     if (tiers[0].maxDiscount && tiers[0].discountType !== "fixed") { conds.appendChild(el("li", null, "Capped at " + money(tiers[0].currency, tiers[0].maxDiscount))); }
@@ -1741,10 +1777,17 @@ function getOffersByProvider(key) {
     li.appendChild(terms);
 
     var cta = el("div", "offer-cta");
-    primary = el("button", "btn");
-    primary.type = "button";
+    /* A real anchor rather than a button, so cmd-click and middle-click open
+       something. The href is the provider's own checkout entry on Laters.com,
+       which is where someone asking for a second tab actually wants to land.
+       A plain click still copies and scrolls to the widget, so the default path
+       is unchanged; only the modified clicks the browser already owns now work. */
+    primary = el("a", "btn");
+    primary.href = active.destinationUrl;
     primary.innerHTML = "<span>" + (tiers[0].code ? "Search flights with this code" : "Search flights with this offer") + "</span>" + ICON_ARROW_UP;
-    primary.addEventListener("click", function () {
+    primary.addEventListener("click", function (ev) {
+      if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey || ev.button !== 0) { return; }
+      ev.preventDefault();
       if (active.code) { doCopy(active, null, li, scrollToSearch); }
       else { scrollToSearch(); }
       track("offer_cta_clicked", { offerId: active.id, provider: active.paymentMethodKey, destination: "hero_search" });
@@ -1754,11 +1797,18 @@ function getOffersByProvider(key) {
 
     function paint() {
       li.dataset.offerId = active.id;
+      /* A real id, so the comparison table's provider links resolve to a card
+         instead of to nothing. Keyed on the group, not the active tier, so the
+         anchor does not move when someone picks a different tier. */
+      li.id = "offer-" + tiers[0].id;
 
       var v = headlineValue(active);
       h3.textContent = "";
       h3.appendChild(document.createTextNode(v.main));
       if (v.unit) { h3.appendChild(el("span", "unit", v.unit)); }
+      /* Puts the provider into the heading for anyone navigating by heading,
+         without a second copy of it on screen. */
+      h3.appendChild(el("span", "sr-only", " with " + provider.name));
 
       var s = savingOn(active, STATE.fare);
       saving.hidden = (s === null);
@@ -1781,7 +1831,12 @@ function getOffersByProvider(key) {
       termsOl.innerHTML = "";
       active.redemptionSteps.forEach(function (step) { termsOl.appendChild(el("li", null, step)); });
 
-      if (primary && active.code) { primary.setAttribute("aria-label", "Copy " + active.code + " and search flights"); }
+      if (codeText) { codeText.textContent = active.code; }
+      if (copyBtn) { copyBtn.setAttribute("aria-label", "Copy code " + active.code); }
+      if (primary) {
+        primary.href = active.destinationUrl;
+        if (active.code) { primary.setAttribute("aria-label", "Copy " + active.code + " and search flights"); }
+      }
     }
 
     paint();
@@ -1895,6 +1950,7 @@ function getOffersByProvider(key) {
     sel.addEventListener("change", function () {
       var from = STATE.country;
       STATE.country = sel.value;
+      COUNTRY_CHOSEN = true;
       persistCountry(sel.value);
       track("deals_country_changed", { from: from, to: sel.value });
       render();
@@ -1915,10 +1971,13 @@ function getOffersByProvider(key) {
       var t = pickTier(g, STATE.fare);
       if (seen[t.paymentMethodKey]) { return; }
       seen[t.paymentMethodKey] = true;
-      rows.push(t);
+      /* Anchor on the group, not the tier: the card's id does not move when a
+         fare selects a different tier, so the link has to match the card. */
+      rows.push({ tier: t, anchor: g.tiers[0].id });
     });
 
-    rows.forEach(function (o) {
+    rows.forEach(function (row) {
+      var o = row.tier;
       var provider = PROVIDERS[o.paymentMethodKey];
       var value = headlineValue(o);
       var tr = document.createElement("tr");
@@ -1933,13 +1992,14 @@ function getOffersByProvider(key) {
       m.setAttribute("aria-hidden", "true");
       wrap.appendChild(m);
       var pl = el("a", null, provider.name);
-      pl.href = "#offer-" + o.id;
+      pl.href = "#offer-" + row.anchor;
       pl.addEventListener("click", function (ev) {
         ev.preventDefault();
         STATE.provider = o.paymentMethodKey;
         track("deals_filter_applied", { filterType: "provider", value: o.paymentMethodKey });
         render();
-        document.getElementById("all-heading").scrollIntoView({ behavior: "smooth", block: "start" });
+        var card = document.getElementById("offer-" + row.anchor);
+        (card || document.getElementById("all-heading")).scrollIntoView({ behavior: "smooth", block: "start" });
       });
       wrap.appendChild(pl);
       th.appendChild(wrap);
@@ -2019,6 +2079,23 @@ function getOffersByProvider(key) {
       /* Leave the active chip clickable even at zero, or there is no way back out. */
       chip.disabled = (n === 0 && val !== "all" && STATE.provider !== val);
     });
+
+    /* Seven of eleven providers have nothing live in the United States, and they
+       were scattered through the row as dead weight. Sort them behind the ones
+       that do, keeping them visible: which providers Laters supports at all is
+       worth knowing, it just should not lead. Sort is stable, so the live chips
+       hold their order. */
+    var row = document.querySelector('[data-filter-row="provider"]');
+    var focused = document.activeElement;
+    Array.prototype.slice.call(row.children)
+      .sort(function (a, b) {
+        if (a.dataset.filterValue === "all") { return -1; }
+        if (b.dataset.filterValue === "all") { return 1; }
+        return (a.disabled ? 1 : 0) - (b.disabled ? 1 : 0);
+      })
+      .forEach(function (chip) { row.appendChild(chip); });
+    /* Moving a node drops focus in some browsers; put it back. */
+    if (focused && focused.parentNode === row && document.activeElement !== focused) { focused.focus(); }
   }
 
   /* ---------- json-ld, generated at render time ---------- */
@@ -2148,6 +2225,12 @@ function getOffersByProvider(key) {
 
     STATE.fareCur = fareCurrency(inCountryLive);
     document.querySelector("[data-fare-cur]").textContent = STATE.fareCur || "";
+    /* The header pill is a replica of the site chrome, and it was hardcoded to
+       IDR while the panel below defaulted to the United States. Follow the
+       country control, which is the only currency signal on this page a
+       visitor can actually act on. */
+    document.querySelector("[data-topbar-cur]").textContent =
+      COUNTRY_CURRENCY[STATE.country] || STATE.fareCur || "USD";
     document.querySelector("[data-fare-clear]").hidden = !STATE.fare;
     document.querySelector("[data-fare-hint]").textContent = STATE.fare
       ? "Codes are ranked by what they save on this fare. Tiers your fare does not reach are dimmed."
