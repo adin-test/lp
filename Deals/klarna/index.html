@@ -328,6 +328,30 @@ a { color: inherit; }
 
 .offer-cta .btn { font-size: 12px; }
 
+/* ---------- image slots ----------
+   Visible boxes rather than silent gaps: the page ships with no art of its own,
+   and anyone reviewing it should see exactly what is missing and at what size.
+   The markup to paste in sits next to each one as a comment. */
+.ph {
+  margin: 0; display: grid; place-items: center; text-align: center;
+  border: 2px dashed var(--kq-line-strong); border-radius: var(--kq-radius-sm);
+  background: repeating-linear-gradient(45deg, transparent, transparent 9px, var(--kq-line-soft) 9px, var(--kq-line-soft) 18px);
+  color: #4b4b4b; padding: 24px 18px;
+}
+.ph-tag {
+  display: inline-block; margin-bottom: 10px; padding: 3px 10px; border-radius: var(--kq-radius-pill);
+  background: var(--kq-invert); color: var(--kq-invert-fg);
+  font-size: 10px; font-weight: 700; letter-spacing: var(--kq-track-caps); text-transform: uppercase;
+}
+.ph-spec { margin: 0 auto; max-width: 34rem; font-size: var(--kq-text-sm); line-height: var(--kq-lh); }
+.ph-spec code { font: 700 12px var(--font-mono); }
+.ph--wide { aspect-ratio: 8 / 3; }
+.ph--side { aspect-ratio: 4 / 3; }
+@media (max-width: 640px) { .ph--wide { aspect-ratio: 3 / 2; } }
+
+.fig { margin: 0; }
+.fig img { display: block; width: 100%; height: auto; border-radius: var(--kq-radius-sm); }
+
 /* ---------- social proof strip ----------
    Sits between the hero and the breadcrumb row, as on the live payment pages.
    The live version pairs a Trustpilot widget with the Google rating; the
@@ -343,10 +367,24 @@ a { color: inherit; }
   font-size: clamp(24px, 13.6px + 3.3vw, 36px); line-height: .95; letter-spacing: -.02em;
   text-wrap: balance; color: var(--kq-ink);
 }
+/* Two ratings side by side with a rule between, as on the homepage. They stack
+   below 480px rather than squeeze. */
+.proofbar-ratings {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 160px));
+  align-items: center; justify-content: center; gap: 8px;
+  width: 100%; max-width: 340px; margin-inline: auto;
+}
+.proofbar-ratings > * + * { border-left: 1px solid var(--kq-line); padding-left: 8px; }
+@media (max-width: 479px) {
+  .proofbar-ratings { grid-template-columns: minmax(0, 1fr); }
+  .proofbar-ratings > * + * { border-left: 0; padding-left: 0; border-top: 1px solid var(--kq-line); padding-top: 14px; }
+}
 .proofbar-rating {
   display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
   min-height: 72px; text-decoration: none; color: inherit; transition: opacity var(--kq-ease);
 }
+.trustpilot-widget { display: flex; align-items: center; justify-content: center; min-height: 72px; min-width: 0; }
+.trustpilot-widget img { display: block; height: 22px; width: auto; }
 .proofbar-rating:hover { opacity: .8; }
 .proofbar-rating img { display: block; height: 28px; width: auto; }
 .proofbar-score { display: flex; align-items: baseline; gap: 3px; font-size: 10px; }
@@ -412,6 +450,15 @@ a { color: inherit; }
   font: 900 13px var(--font-display); letter-spacing: .02em; text-transform: uppercase;
 }
 .mark--sm { width: 28px; height: 28px; font-size: 11px; }
+/* Logo chip, following .kx-pm on the live pages: the art sits in the background
+   so it letterboxes inside a fixed square instead of stretching it. Providers
+   with no mark in laters.com's set keep the initials treatment above. */
+.mark--logo {
+  background-color: var(--kq-page); border: 1px solid var(--kq-card-line); padding: 3px;
+  background-size: contain; background-position: 50%; background-repeat: no-repeat;
+  background-origin: content-box; background-clip: content-box;
+  color: transparent; font-size: 0;
+}
 
 /* ---------- result line ---------- */
 
@@ -703,6 +750,13 @@ a { color: inherit; }
 }
 .kxa-band .kxa-t-1 { transform: rotate(-6deg); z-index: 1; }
 .kxa-band .kxa-t-2 { transform: rotate(5deg); z-index: 2; margin-left: -16px; }
+/* These two tiles were "KL" and "AF", initials standing in for the provider
+   marks. With the real art they need a light ground, since the logos are
+   colour on transparent. */
+.kxa-band .kxa-tile--logo {
+  background-color: var(--kq-page); color: transparent; font-size: 0;
+  background-size: 62%; background-position: 50%; background-repeat: no-repeat;
+}
 
 /* ---------- eyebrow sticker ----------
    Rotated label above every section head on the live site. */
@@ -880,7 +934,7 @@ a { color: inherit; }
       <span>Multiple providers, one search</span>
     </span>
     <span class="kxa-lock">
-        <span class="kxa-tile kxa-t-1">KL</span>
+        <span class="kxa-tile kxa-tile--logo kxa-t-1" data-tile="klarna">KL</span>
     </span>
   </div>
 </div>
@@ -936,11 +990,26 @@ a { color: inherit; }
 <section class="proofbar" aria-label="Why travelers choose Laters.com">
   <div class="proofbar-inner">
     <h2 class="proofbar-h">Over <span>a million</span> travelers a year<br>find flights on Laters.com</h2>
-    <a class="proofbar-rating" href="https://g.page/r/CcdJ2oIi5n1REAE/" target="_blank" rel="noopener noreferrer"
-       aria-label="Rated 4.8 out of 5 on Google. Read reviews">
-      <img src="../media/google-wordmark.svg" width="75" height="24" alt="Google">
-      <span class="proofbar-score" aria-hidden="true"><b>4.8</b><span>/ 5 on Google</span></span>
-    </a>
+    <div class="proofbar-ratings">
+      <!-- Trustpilot renders through Trustpilot's own script, the same business
+           unit and template the homepage uses. The widget replaces what is inside
+           it once it loads; until then, and if it never does, the official
+           Trustpilot mark links to the review page. No score is written by hand:
+           the only honest source for it is the widget itself. -->
+      <div class="trustpilot-widget" data-locale="en-US"
+           data-template-id="5419b732fbfb950b10de65e5"
+           data-businessunit-id="6a40f3fbe5c85d36546243b9"
+           data-style-height="72px" data-style-width="100%" data-style-alignment="center">
+        <a href="https://www.trustpilot.com/review/laters.com" target="_blank" rel="noopener noreferrer">
+          <img src="../media/trustpilot-logo.svg" width="100" height="25" alt="Trustpilot">
+        </a>
+      </div>
+      <a class="proofbar-rating" href="https://g.page/r/CcdJ2oIi5n1REAE/" target="_blank" rel="noopener noreferrer"
+         aria-label="Rated 4.8 out of 5 on Google. Read reviews">
+        <img src="../media/google-wordmark.svg" width="75" height="24" alt="Google">
+        <span class="proofbar-score" aria-hidden="true"><b>4.8</b><span>/ 5 on Google</span></span>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -1071,6 +1140,17 @@ a { color: inherit; }
         <div>
           <h2>How Does Klarna Actually Work?</h2>
           <p>This page covers what is on offer today. For full plan mechanics, fees, and eligibility, read the Klarna payment guide.</p>
+        <figure class="ph ph--side">
+          <div>
+            <span class="ph-tag">Image slot</span>
+            <p class="ph-spec"><code>klarna-how-it-works.jpg</code> &middot; <code>800x600</code><br>Klarna's own press or brand imagery for this one, not stock: it is the provider this page is about. No readable prices or checkout UI, which date fast.</p>
+          </div>
+        </figure>
+        <!-- When the art exists, replace the figure above with:
+             <figure class="fig">
+               <img src="../media/klarna-how-it-works.jpg" width="800" height="600" loading="lazy" decoding="async"
+                    alt="Paying for a flight with Klarna at checkout">
+             </figure> -->
         </div>
         <a class="btn" href="https://laters.com/payment/klarna">
           Klarna payment guide
@@ -1259,6 +1339,15 @@ a { color: inherit; }
    source". Swap OFFERS for the real endpoint inside getOffers
    and getOffersByProvider only.
    ============================================================ */
+
+/* File stem under media/providers/ for each provider that has a mark in
+   laters.com's kx-pm set. Crypto and ShopeePayLater have none, so they fall
+   through to the initials chip. */
+var PROVIDER_LOGOS = {
+  "klarna": "klarna", "afterpay": "afterpay", "atome": "atome", "zip": "zip",
+  "tabby": "tabby", "tamara": "tamara", "affirm": "affirm",
+  "grab-paylater": "grab", "splitit": "splitit"
+};
 
 var PROVIDERS = {
   "klarna":            { name: "Klarna",         initials: "KL", paymentPage: "https://laters.com/payment/klarna" },
@@ -1481,6 +1570,22 @@ function getOffersByProvider(key) {
     else if (hours < 24) { text = "Ends in " + hours + (hours === 1 ? " hour" : " hours"); }
     else { var days = Math.floor(left / DAY); text = "Ends in " + days + (days === 1 ? " day" : " days"); }
     return { text: text, soon: true, expired: false, iso: iso };
+  }
+
+  /* Media lives beside the page, resolved the way links are so it survives
+     /deals and /deals/ alike. */
+  function MEDIA() { return window.location.pathname.replace(/\/[^\/]*\.html?$/i, "/").replace(/\/?$/, "/") + "../media/"; }
+
+  /* Every provider mark on the page is built here: a logo chip where laters.com
+     has art for that provider, the initials chip where it does not. */
+  function providerMark(key, extraClass) {
+    var provider = PROVIDERS[key];
+    var stem = PROVIDER_LOGOS[key];
+    var m = el("span", "mark" + (extraClass ? " " + extraClass : "") + (stem ? " mark--logo" : ""),
+               provider.initials);
+    if (stem) { m.style.backgroundImage = "url(" + MEDIA() + "providers/" + stem + ".png)"; }
+    m.setAttribute("aria-hidden", "true");
+    return m;
   }
 
   function headlineValue(offer) {
@@ -1736,9 +1841,7 @@ function getOffersByProvider(key) {
     li.appendChild(spend);
 
     var prov = el("p", "offer-provider");
-    var mark = el("span", "mark mark--sm", provider.initials);
-    mark.setAttribute("aria-hidden", "true");
-    prov.appendChild(mark);
+    prov.appendChild(providerMark(tiers[0].paymentMethodKey, "mark--sm"));
     var provText = el("span");
     var provLink = el("a", null, provider.name);
     provLink.href = provider.paymentPage;
@@ -2182,6 +2285,10 @@ function getOffersByProvider(key) {
   var PAGE_UPDATED = "2026-09-21";
   document.querySelector("[data-updated]").textContent = fmtDate(PAGE_UPDATED);
 
+  document.querySelectorAll("[data-tile]").forEach(function (t) {
+    t.style.backgroundImage = "url(" + MEDIA() + "providers/" + t.dataset.tile + ".png)";
+  });
+
   buildCountrySelect();
   STATE.fare = readFare();
   bindFare();
@@ -2203,5 +2310,6 @@ function getOffersByProvider(key) {
 })();
 </script>
 
+<script src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
 </body>
 </html>
