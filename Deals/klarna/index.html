@@ -351,7 +351,10 @@ a { color: inherit; }
 
 /* Matches figure.kx-about-image on the airline pages: full container width,
    closing a section rather than sitting inside one. */
-.fig { margin: 0 0 24px; }
+/* Airline pages run 0 0 24px, but their figures follow prose that already
+   carries its own bottom space. Ours butt straight up against a card grid
+   or a crosslink panel, so they need the air above as well. */
+.fig { margin: 44px 0 32px; }
 /* The airline pages letterbox their photographs rather than letting them run
    at natural aspect: 3:2 on a phone, 3:1 from 768px up, object-fit: cover,
    16px radius. At natural aspect ours stood nearly twice as tall as theirs. */
@@ -1161,11 +1164,12 @@ a { color: inherit; }
         </a>
       </div>
 
-      <!-- Klarna's own campaign photography, as used on laters.com/payment/klarna. Swap in a customised version by replacing this file. -->
+      <!-- Supplied by marketing. Raised to 30%: a centred 3:1 band clips the
+           top of the head. -->
       <figure class="fig">
-        <img src="../media/klarna-how-it-works.webp" width="1080" height="720" loading="lazy" decoding="async"
-       style="object-position: center 25%"
-             alt="A Klarna billboard reading “Think smart, pay smarter” above Macy’s on West 34th Street, New York">
+        <img src="../media/klarna-sunset-peace.webp" width="1600" height="1066" loading="lazy" decoding="async"
+             style="object-position: center 30%"
+             alt="A person silhouetted against a sunset sky, holding up peace signs with both hands">
       </figure>
     </div>
   </section>

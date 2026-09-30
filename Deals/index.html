@@ -351,7 +351,10 @@ a { color: inherit; }
 
 /* Matches figure.kx-about-image on the airline pages: full container width,
    closing a section rather than sitting inside one. */
-.fig { margin: 0 0 24px; }
+/* Airline pages run 0 0 24px, but their figures follow prose that already
+   carries its own bottom space. Ours butt straight up against a card grid
+   or a crosslink panel, so they need the air above as well. */
+.fig { margin: 44px 0 32px; }
 /* The airline pages letterbox their photographs rather than letting them run
    at natural aspect: 3:2 on a phone, 3:1 from 768px up, object-fit: cover,
    16px radius. At natural aspect ours stood nearly twice as tall as theirs. */
@@ -1125,11 +1128,10 @@ a { color: inherit; }
         <ul class="grid" data-away-grid></ul>
       </details>
 
-      <!-- laters.com's own Tokyo destination hero. Swap in a customised version by replacing this file. -->
+      <!-- Supplied by marketing. Centred: the 3:1 band holds all three faces. -->
       <figure class="fig">
-        <img src="media/deals-how-it-works.webp" width="1200" height="670" loading="lazy" decoding="async"
-       style="object-position: center 22%"
-             alt="Tokyo at dusk, looking across Shinjuku towards Mount Fuji">
+        <img src="media/deals-friends-night.webp" width="1600" height="1066" loading="lazy" decoding="async"
+             alt="Friends laughing together around an outdoor table at night">
       </figure>
     </div>
   </section>
@@ -1160,10 +1162,11 @@ a { color: inherit; }
         </a>
       </div>
 
-      <!-- laters.com's own Maldives destination hero. Swap in a customised version by replacing this file. -->
+      <!-- Supplied by marketing. Centred: the boats, the cliffs and the beach
+           all sit inside the 3:1 band. -->
       <figure class="fig">
-        <img src="media/deals-band.webp" width="1920" height="1072" loading="lazy" decoding="async"
-             alt="Aerial view of Maldives atolls at sunset">
+        <img src="media/deals-longtail-boats.webp" width="1600" height="1066" loading="lazy" decoding="async"
+             alt="Longtail boats moored in turquoise water below limestone cliffs in Thailand">
       </figure>
     </div>
   </section>
