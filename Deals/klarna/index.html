@@ -352,7 +352,14 @@ a { color: inherit; }
 /* Matches figure.kx-about-image on the airline pages: full container width,
    closing a section rather than sitting inside one. */
 .fig { margin: 0 0 24px; }
-.fig img { display: block; width: 100%; height: auto; border-radius: var(--kq-radius-sm); }
+/* The airline pages letterbox their photographs rather than letting them run
+   at natural aspect: 3:2 on a phone, 3:1 from 768px up, object-fit: cover,
+   16px radius. At natural aspect ours stood nearly twice as tall as theirs. */
+.fig img {
+  display: block; width: 100%; height: auto;
+  aspect-ratio: 3 / 2; object-fit: cover; border-radius: 16px;
+}
+@media (min-width: 768px) { .fig img { aspect-ratio: 3 / 1; } }
 
 /* ---------- social proof strip ----------
    Sits between the hero and the breadcrumb row, as on the live payment pages.
@@ -1157,6 +1164,7 @@ a { color: inherit; }
       <!-- Klarna's own campaign photography, as used on laters.com/payment/klarna. Swap in a customised version by replacing this file. -->
       <figure class="fig">
         <img src="../media/klarna-how-it-works.webp" width="1080" height="720" loading="lazy" decoding="async"
+       style="object-position: center 25%"
              alt="A Klarna billboard reading “Think smart, pay smarter” above Macy’s on West 34th Street, New York">
       </figure>
     </div>
