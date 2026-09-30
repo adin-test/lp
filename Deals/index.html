@@ -349,7 +349,9 @@ a { color: inherit; }
 .ph--side { aspect-ratio: 4 / 3; }
 @media (max-width: 640px) { .ph--wide { aspect-ratio: 3 / 2; } }
 
-.fig { margin: 0; }
+/* Matches figure.kx-about-image on the airline pages: full container width,
+   closing a section rather than sitting inside one. */
+.fig { margin: 0 0 24px; }
 .fig img { display: block; width: 100%; height: auto; border-radius: var(--kq-radius-sm); }
 
 /* ---------- social proof strip ----------
@@ -1116,6 +1118,11 @@ a { color: inherit; }
         <ul class="grid" data-away-grid></ul>
       </details>
 
+      <!-- laters.com's own Tokyo destination hero. Swap in a customised version by replacing this file. -->
+      <figure class="fig">
+        <img src="media/deals-how-it-works.webp" width="1200" height="670" loading="lazy" decoding="async"
+             alt="Tokyo at dusk, looking across Shinjuku towards Mount Fuji">
+      </figure>
     </div>
   </section>
 
@@ -1144,6 +1151,12 @@ a { color: inherit; }
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </a>
       </div>
+
+      <!-- laters.com's own Maldives destination hero. Swap in a customised version by replacing this file. -->
+      <figure class="fig">
+        <img src="media/deals-band.webp" width="1920" height="1072" loading="lazy" decoding="async"
+             alt="Aerial view of Maldives atolls at sunset">
+      </figure>
     </div>
   </section>
 
@@ -1151,13 +1164,7 @@ a { color: inherit; }
   <section class="section" aria-labelledby="faq-heading">
     <div class="shell">
       <div class="section-head">
-        <!-- laters.com's own Maldives destination hero. Swap in a customised version by replacing this file. -->
-        <figure class="fig">
-          <img src="media/deals-band.webp" width="1920" height="1072" loading="lazy" decoding="async"
-               alt="Aerial view of Maldives atolls at sunset">
-        </figure>
-
-      <div class="eyebrow-row"><span class="eyebrow"><span>Promo code FAQ</span></span></div>
+        <div class="eyebrow-row"><span class="eyebrow"><span>Promo code FAQ</span></span></div>
         <h2 id="faq-heading">Promo Code Questions</h2>
       </div>
       <div class="faq">

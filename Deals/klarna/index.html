@@ -349,7 +349,9 @@ a { color: inherit; }
 .ph--side { aspect-ratio: 4 / 3; }
 @media (max-width: 640px) { .ph--wide { aspect-ratio: 3 / 2; } }
 
-.fig { margin: 0; }
+/* Matches figure.kx-about-image on the airline pages: full container width,
+   closing a section rather than sitting inside one. */
+.fig { margin: 0 0 24px; }
 .fig img { display: block; width: 100%; height: auto; border-radius: var(--kq-radius-sm); }
 
 /* ---------- social proof strip ----------
@@ -1145,17 +1147,18 @@ a { color: inherit; }
         <div>
           <h2>How Does Klarna Actually Work?</h2>
           <p>This page covers what is on offer today. For full plan mechanics, fees, and eligibility, read the Klarna payment guide.</p>
-        <!-- Klarna's own campaign photography, as used on laters.com/payment/klarna. Swap in a customised version by replacing this file. -->
-        <figure class="fig">
-          <img src="../media/klarna-how-it-works.webp" width="1080" height="720" loading="lazy" decoding="async"
-               alt="A Klarna billboard reading “Think smart, pay smarter” above Macy’s on West 34th Street, New York">
-        </figure>
         </div>
         <a class="btn" href="https://laters.com/payment/klarna">
           Klarna payment guide
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </a>
       </div>
+
+      <!-- Klarna's own campaign photography, as used on laters.com/payment/klarna. Swap in a customised version by replacing this file. -->
+      <figure class="fig">
+        <img src="../media/klarna-how-it-works.webp" width="1080" height="720" loading="lazy" decoding="async"
+             alt="A Klarna billboard reading “Think smart, pay smarter” above Macy’s on West 34th Street, New York">
+      </figure>
     </div>
   </section>
 
